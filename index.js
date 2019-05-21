@@ -4,6 +4,7 @@ var canvas, gl, program, shadowProgram;
 
 var cubeNumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 var pyramidNumVertices = 18;
+var textureFlag = true;
 
 var cubeVertices = [
     vec4(-0.5, -0.5,  0.5, 1.0),
@@ -33,9 +34,7 @@ var texCoord = [
 
 // Shader transformation matrices
 
-var modelViewMatrix, projectionMatrix;
-
-var modelViewMatrixLoc;
+var modelViewMatrix, projectionMatrix, modelViewMatrixLoc;
 
 // === Object 1 (Hand) ===
 // Default parameters
@@ -198,8 +197,9 @@ var jeansImage;
 var lowerFingerImage;
 var metalicImage;
 var woolImage;
-var woodImage;
+var wallImage;
 var texture;
+var redTexture;
 
 // Parameters for GL Buffer
 
@@ -317,6 +317,20 @@ function colorPyramid() {
 function configureTexture(image) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    if (textureFlag) {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+    } else {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, redTexture);
+    }
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
+}
+
+function forcedConfigureTexture(image) {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
@@ -393,7 +407,8 @@ window.onload = function init() {
     lowerFingerImage = document.getElementById("lower-finger-texture");
     metalicImage = document.getElementById("metalic-texture");
     woolImage = document.getElementById("wool-texture");
-    woodImage = document.getElementById("wood-texture");
+    wallImage = document.getElementById("wall-texture");
+    redTexture = document.getElementById("red-texture")
 
     // Slider for Object 1 (Hand)
 
@@ -567,6 +582,10 @@ window.onload = function init() {
         pyramidAnimationFlag = !pyramidAnimationFlag;
     };
 
+    document.getElementById("textureButton").onclick = function () {
+        textureFlag = !textureFlag;
+    }
+
     texture = gl.createTexture();
 
     render();
@@ -620,7 +639,11 @@ function palm() {
     var instanceMatrix = mult(translate(0.0, 0.5 * PALM_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function lowerPinkie() {
@@ -628,7 +651,11 @@ function lowerPinkie() {
     var instanceMatrix = mult(translate(PINKIE_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function upperPinkie() {
@@ -636,7 +663,11 @@ function upperPinkie() {
     var instanceMatrix = mult(translate(PINKIE_X, 0.5 * PINKIE_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function lowerRing() {
@@ -644,7 +675,11 @@ function lowerRing() {
     var instanceMatrix = mult(translate(RING_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function upperRing() {
@@ -652,7 +687,11 @@ function upperRing() {
     var instanceMatrix = mult(translate(RING_X, 0.5 * RING_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function lowerMiddle() {
@@ -660,7 +699,11 @@ function lowerMiddle() {
     var instanceMatrix = mult(translate(MIDDLE_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function upperMiddle() {
@@ -668,7 +711,11 @@ function upperMiddle() {
     var instanceMatrix = mult(translate(MIDDLE_X, 0.5 * MIDDLE_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function lowerIndex() {
@@ -676,7 +723,11 @@ function lowerIndex() {
     var instanceMatrix = mult(translate(INDEX_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function upperIndex() {
@@ -684,7 +735,11 @@ function upperIndex() {
     var instanceMatrix = mult(translate(INDEX_X, 0.5 * INDEX_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function lowerThumb() {
@@ -692,7 +747,11 @@ function lowerThumb() {
     var instanceMatrix = mult(translate(THUMB_X, THUMB_Y, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function upperThumb() {
@@ -700,7 +759,11 @@ function upperThumb() {
     var instanceMatrix = mult(translate(2*THUMB_X, THUMB_Y, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 // Instantiate Object Parts for Object2 (Robot)
@@ -710,7 +773,11 @@ function torso() {
     var instanceMatrix = mult(translate(0.0, 0.5*torsoHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function head() {
@@ -718,7 +785,11 @@ function head() {
     var instanceMatrix = mult(translate(0.0, 0.5 * headHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function leftUpperArm() {
@@ -726,7 +797,11 @@ function leftUpperArm() {
     var instanceMatrix = mult(translate(0.5 * upperArmWidth, 0.5 * upperArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function leftLowerArm() {
@@ -734,7 +809,11 @@ function leftLowerArm() {
     var instanceMatrix = mult(translate(0.5 * lowerArmWidth, 0.5 * lowerArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function rightUpperArm() {
@@ -742,7 +821,11 @@ function rightUpperArm() {
     var instanceMatrix = mult(translate(-0.5 * upperArmWidth, 0.5 * upperArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function rightLowerArm() {
@@ -750,7 +833,11 @@ function rightLowerArm() {
     var instanceMatrix = mult(translate(-0.5 * lowerArmWidth, 0.5 * lowerArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function leftUpperLeg() {
@@ -758,7 +845,11 @@ function leftUpperLeg() {
     var instanceMatrix = mult(translate(0.0, 0.6 * upperLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function leftLowerLeg() {
@@ -766,7 +857,11 @@ function leftLowerLeg() {
     var instanceMatrix = mult(translate(0.0, 0.5 * lowerLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function rightUpperLeg() {
@@ -774,7 +869,11 @@ function rightUpperLeg() {
     var instanceMatrix = mult(translate(0.0, 0.6 * upperLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 function rightLowerLeg() {
@@ -782,7 +881,11 @@ function rightLowerLeg() {
     var instanceMatrix = mult(translate(0.0, 0.5 * lowerLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 // Instantiate Object Parts for Object4 (Cube)
@@ -791,7 +894,11 @@ function cube() {
     var instanceMatrix = scale4(3, 3, 3);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 // Instantiate Object Parts for Object5 (Pyramid)
@@ -800,7 +907,11 @@ function pyramid() {
     var instanceMatrix = scale4(3, 3, 3);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
+    } else {
+        for(var i=cubeNumVertices; i<cubeNumVertices+pyramidNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
 }
 
 // Instantiate Object Parts for Room
@@ -912,7 +1023,7 @@ var render = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Background
-    configureTexture(woodImage);
+    forcedConfigureTexture(wallImage);
     // Floor
     modelViewMatrix = rotate(20,1,0,0);
     floor();
