@@ -147,6 +147,54 @@ var angle = 0;
 var thetaRobotNonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var thetaRobotAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+// Object 3 (Dino)
+// angle of each rotation, the order is according to the identifier
+
+var thetaDino = [0,0,0,0,0,0,0,0,0];
+
+// Identifier of each object parts
+
+var dinoTorsoId = 0;
+var dinoHeadId = 1;
+var dinoLeftUpperLegId = 2;
+var dinoLeftLowerLegId = 3;
+var dinoRightUpperLegId = 4;
+var dinoRightLowerLegId = 5;
+var dinoTail1Id = 6;
+var dinoTail2Id = 7;
+var dinoTail3Id = 8;
+
+// The size of object parts
+var dinoScale = 2;
+
+var dinoTorsoWidth = dinoScale * 1.4;
+var dinoTorsoHeight = dinoScale * 0.8;
+var dinoTorsoDepth = dinoScale * 0.7;
+var dinoHeadWidth = dinoScale * 1;
+var dinoHeadHeight = dinoScale * 0.75;
+var dinoHeadDepth = dinoScale * 0.8;
+var dinoUpperLegWidth = dinoScale * 0.5;
+var dinoUpperLegHeight = dinoScale * 0.7;
+var dinoUpperLegDepth = dinoScale * 0.4;
+var dinoLowerLegWidth = dinoScale * 0.5;
+var dinoLowerLegHeight = dinoScale * 0.6;
+var dinoLowerLegDepth = dinoScale * 0.4;
+var dinoTail1Width = dinoScale * 0.7;
+var dinoTail1Height = dinoScale * 0.4;
+var dinoTail1Depth = dinoScale * 0.45;
+var dinoTail2Width = dinoScale * 0.5;
+var dinoTail2Height = dinoScale * 0.25;
+var dinoTail2Depth = dinoScale * 0.33;
+var dinoTail3Width = dinoScale * 0.35;
+var dinoTail3Height = dinoScale * 0.15;
+var dinoTail3Depth = dinoScale * 0.2;
+
+// Animation
+var thetaDinoAnimation = [0,0,0,0,0,0,0,0,0];
+var thetaDinoNonAnimation = [0,0,0,0,0,0,0,0,0];
+
+var dinoAnimationFlag = false;
+
 // === Object 4 (Cube) ===
 // angle of each rotation, the order is according to the identifier above
 
@@ -506,6 +554,42 @@ window.onload = function init() {
         thetaRobot[head2Id] = parseInt(event.target.value);
     };
 
+    document.getElementById("dinoTorso").onchange = function (event) {
+        thetaDino[dinoTorsoId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoHead").onchange = function (event) {
+        thetaDino[dinoHeadId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoLeftUpperLeg").onchange = function (event) {
+        thetaDino[dinoLeftUpperLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoLeftLowerLeg").onchange = function (event) {
+        thetaDino[dinoLeftLowerLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoRightUpperLeg").onchange = function (event) {
+        thetaDino[dinoRightUpperLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoRightLowerLeg").onchange = function (event) {
+        thetaDino[dinoRightLowerLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoTail1").onchange = function (event) {
+        thetaDino[dinoTail1Id] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoTail2").onchange = function (event) {
+        thetaDino[dinoTail2Id] = parseInt(event.target.value);
+    };
+
+    document.getElementById("dinoTail3").onchange = function (event) {
+        thetaDino[dinoTail3Id] = parseInt(event.target.value);
+    };
+
     document.getElementById("CubeXSlider").onchange = function(event) {
         thetaCube[cubeX] = parseInt(event.target.value);
     };
@@ -534,39 +618,48 @@ window.onload = function init() {
         if (handAnimationFlag) {
             thetaHandAnimation = thetaHand.slice();
             thetaHand = thetaHandNonAnimation.slice();
-            toggleHandSlider(false);
         } else {
             thetaHandNonAnimation = thetaHand.slice();
             thetaHand = thetaHandAnimation.slice();
-            toggleHandSlider(true);
         }
         handAnimationFlag = !handAnimationFlag;
+        toggleHandSlider(handAnimationFlag);
     };
 
     document.getElementById("animateButton2").onclick = function () {
         if (robotAnimationFlag) {
             thetaRobotAnimation = thetaRobot.slice();
             thetaRobot = thetaRobotNonAnimation.slice();
-            toggleRobotSlider(false);
         } else {
             thetaRobotNonAnimation = thetaRobot.slice();
             thetaRobot = thetaRobotAnimation.slice();
-            toggleRobotSlider(true);
         }
         robotAnimationFlag = !robotAnimationFlag;
+        toggleRobotSlider(robotAnimationFlag);
     };
+
+    document.getElementById("animateButton3").onclick = function () {
+        if (dinoAnimationFlag) {
+            thetaDinoAnimation = thetaDino.slice();
+            thetaDino = thetaDinoNonAnimation.slice();
+        } else {
+            thetaDinoNonAnimation = thetaDino.slice();
+            thetaDino = thetaDinoAnimation.slice();
+        }
+        dinoAnimationFlag = !dinoAnimationFlag;
+        toggleDinoSlider(dinoAnimationFlag);
+    }
 
     document.getElementById("animateButton4").onclick = function () {
         if (cubeAnimationFlag) {
             thetaCubeAnimation = thetaCube.slice();
             thetaCube = thetaCubeNonAnimation.slice();
-            toggleCubeSlider(false);
         } else {
             thetaCubeNonAnimation = thetaCube.slice();
             thetaCube = thetaCubeAnimation.slice();
-            toggleCubeSlider(true);
         }
         cubeAnimationFlag = !cubeAnimationFlag;
+        toggleCubeSlider(cubeAnimationFlag);
     };
 
     document.getElementById("animateButton5").onclick = function () {
@@ -618,6 +711,18 @@ function toggleRobotSlider(state) {
     document.getElementById("slider8").disabled = state;
     document.getElementById("slider9").disabled = state;
     document.getElementById("slider10").disabled = state;
+}
+
+function toggleDinoSlider(state) {
+    document.getElementById("dinoTorso").disabled = state;
+    document.getElementById("dinoHead").disabled = state;
+    document.getElementById("dinoLeftUpperLeg").disabled = state;
+    document.getElementById("dinoLeftLowerLeg").disabled = state;
+    document.getElementById("dinoRightUpperLeg").disabled = state;
+    document.getElementById("dinoRightLowerLeg").disabled = state;
+    document.getElementById("dinoTail1").disabled = state;
+    document.getElementById("dinoTail2").disabled = state;
+    document.getElementById("dinoTail3").disabled = state;
 }
 
 function toggleCubeSlider(state) {
@@ -879,6 +984,114 @@ function rightUpperLeg() {
 function rightLowerLeg() {
     var s = scale4(lowerLegWidth, lowerLegHeight, lowerLegWidth);
     var instanceMatrix = mult(translate(0.0, 0.5 * lowerLegHeight, 0.0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+// Instantiate Object Parts for Object3 (Dino)
+
+function dinoTorso() {
+    var s = scale4(dinoTorsoWidth, dinoTorsoHeight, dinoTorsoDepth);
+    var instanceMatrix = mult(translate(0.0, 0.5*dinoTorsoHeight, 0.0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoHead() {
+    var s = scale4(dinoHeadWidth, dinoHeadHeight, dinoHeadDepth);
+    var instanceMatrix = mult(translate(0.9*dinoHeadWidth, dinoTorsoHeight, 0.0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoLeftUpperLeg() {
+    var s = scale4(dinoUpperLegWidth, dinoUpperLegHeight, dinoUpperLegDepth);
+    var t = mult(modelViewMatrix, s);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoLeftLowerLeg() {
+    var s = scale4(dinoLowerLegWidth, dinoLowerLegHeight, dinoLowerLegDepth);
+    var instanceMatrix = mult(translate(0, 0.5*dinoLowerLegHeight, 0.0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoRightUpperLeg() {
+    var s = scale4(dinoUpperLegWidth, dinoUpperLegHeight, dinoUpperLegDepth);
+    var t = mult(modelViewMatrix, s);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoRightLowerLeg() {
+    var s = scale4(dinoLowerLegWidth, dinoLowerLegHeight, dinoLowerLegDepth);
+    var instanceMatrix = mult(translate(0, 0.5*dinoLowerLegHeight, 0.0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoTail1() {
+    var s = scale4(dinoTail1Width, dinoTail1Height, dinoTail1Depth);
+    var instanceMatrix = mult(translate(0,0,0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoTail2() {
+    var s = scale4(dinoTail2Width, dinoTail2Height, dinoTail2Depth);
+    var instanceMatrix = mult(translate(0,0,0),s);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (textureFlag) {
+        gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+    } else {
+        for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
+    }
+}
+
+function dinoTail3() {
+    var s = scale4(dinoTail3Width, dinoTail3Height, dinoTail3Depth);
+    var instanceMatrix = mult(translate(0,0,0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
@@ -1237,6 +1450,103 @@ var render = function() {
         modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[rightLowerLegId], 1, 0, 0));
     }
     rightLowerLeg();
+
+    // Object 3 (Dino)
+
+    if (dinoAnimationFlag) {
+        thetaDino[dinoTorsoId] += 1;
+        thetaDino[dinoHeadId] += 0.03;
+        thetaDino[dinoLeftUpperLegId] += 0.03;
+        thetaDino[dinoLeftLowerLegId] += 0.03;
+        thetaDino[dinoRightUpperLegId] += 0.03;
+        thetaDino[dinoRightLowerLegId] += 0.03;
+        thetaDino[dinoTail1Id] += 0.02;
+        thetaDino[dinoTail2Id] += 0.02;
+        thetaDino[dinoTail3Id] += 0.02;
+    }
+
+    // Torso
+    modelViewMatrix = translate(6, 3, 0, 0);
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoTorsoId] - 90, 0, 1, 0));
+    temp = modelViewMatrix;
+    modelViewMatrix = mult(modelViewMatrix, rotate(15, 0, 0, 1));
+    dinoTorso();
+
+    // Head
+    modelViewMatrix = temp;
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(45 * Math.sin(thetaDino[dinoHeadId]), 0, 1, 0));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoHeadId], 0, 1, 0));
+    }
+    dinoHead();
+
+    // LeftLeg
+    modelViewMatrix = temp;
+    modelViewMatrix = mult(modelViewMatrix, translate(0, 0, 0.5*dinoTorsoDepth + 0.5 * dinoUpperLegDepth));
+    modelViewMatrix = mult(modelViewMatrix, translate(-3/14*dinoTorsoWidth, 0, 0));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(25 + 30 * Math.sin(thetaDino[dinoLeftUpperLegId]), 0, 0, 1));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(25 + thetaDino[dinoLeftUpperLegId], 0, 0, 1));
+    }
+    dinoLeftUpperLeg();
+
+    modelViewMatrix = mult(modelViewMatrix, translate(0, -0.4*dinoUpperLegHeight, 0));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(160 - Math.abs(10 * Math.cos(thetaDino[dinoLeftLowerLegId])), 0, 0, 1))
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(150 - thetaDino[dinoLeftLowerLegId], 0, 0, 1))
+    }
+    dinoLeftLowerLeg();
+
+    // RightLeg
+    modelViewMatrix = temp;
+    modelViewMatrix = mult(modelViewMatrix, translate(0, 0, -0.5*dinoTorsoDepth - 0.5 * dinoUpperLegDepth));
+    modelViewMatrix = mult(modelViewMatrix, translate(-3/14*dinoTorsoWidth, 0, 0));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(25 - 30 * Math.sin(thetaDino[dinoRightUpperLegId]), 0, 0, 1));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(25 + thetaDino[dinoRightUpperLegId], 0, 0, 1));
+    }
+    dinoRightUpperLeg();
+
+    modelViewMatrix = mult(modelViewMatrix, translate(0, -0.4*dinoUpperLegHeight, 0));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(160 - Math.abs(10 * Math.cos(thetaDino[dinoRightLowerLegId])), 0, 0, 1));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(150 - thetaDino[dinoRightLowerLegId], 0, 0, 1));
+    }
+    dinoRightLowerLeg();
+
+    // Tail
+    modelViewMatrix = temp;
+    modelViewMatrix = mult(modelViewMatrix, rotate(20, 0, 0, 1));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(20 * Math.sin(thetaDino[dinoTail1Id]), 0, 1, 0));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoTail1Id], 0, 1, 0));
+    }
+    modelViewMatrix = mult(modelViewMatrix, translate(-0.7*dinoTorsoWidth, 0, 0.0));
+    modelViewMatrix = mult(modelViewMatrix, translate(0, 0.5*dinoTorsoHeight + 0.5*dinoTail1Height, 0.0));
+    dinoTail1();
+
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(15 * Math.sin(thetaDino[dinoTail2Id]), 0, 1, 0));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoTail2Id], 0, 1, 0));
+    }
+    modelViewMatrix = mult(modelViewMatrix, translate(-0.8*dinoTail1Width, -0.1*dinoTail2Height, 0.0));
+    dinoTail2();
+
+    modelViewMatrix = mult(modelViewMatrix, rotate(3, 0, 0, 1));
+    if (dinoAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(10 * Math.sin(thetaDino[dinoTail3Id]), 0, 1, 0));
+    } else {
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoTail3Id], 0, 1, 0));
+    }
+    modelViewMatrix = mult(modelViewMatrix, translate(-0.8*dinoTail2Width, -0.1*dinoTail3Height, 0.0));
+    dinoTail3();
 
     // Object 4 (Cube)
     if (cubeAnimationFlag) {
