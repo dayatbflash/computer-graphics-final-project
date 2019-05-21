@@ -59,7 +59,7 @@ var UpperThumb = 11;
 
 // Parameters controlling the size of the Arm and Fingers
 
-var HAND_SCALE = 0.7;
+var HAND_SCALE = 0.6;
 
 var PALM_HEIGHT = 3.0 * HAND_SCALE;
 var PALM_WIDTH = 4.0 * HAND_SCALE;
@@ -96,6 +96,9 @@ var FIST = 2;
 var directionFist = 1;
 var countFist = 0;
 
+var theta1NonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var theta1Animation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
 // Object 2 (Robot)
 // angle of each rotation, the order is according to the identifier above
 
@@ -118,7 +121,7 @@ var head2Id = 10;
 
 // The size of object parts
 
-var robotScale = 0.7;
+var robotScale = 0.6;
 
 var torsoHeight = 5.0 * robotScale;
 var torsoWidth = 3.0 * robotScale;
@@ -361,7 +364,112 @@ window.onload = function init() {
     woolImage = document.getElementById("wool-texture");
     woodImage = document.getElementById("wood-texture");
 
+    // Slider for Object 1 (Hand)
+
+    document.getElementById("PalmYSlider").onchange = function(event) {
+        theta1[PalmY] = event.target.value;
+    };
+
+    document.getElementById("PalmZSlider").onchange = function(event) {
+        theta1[PalmZ] = event.target.value;
+    };
+
+    document.getElementById("LowerPinkieSlider").onchange = function(event) {
+        theta1[LowerPinkie] = event.target.value;
+    };
+
+    document.getElementById("UpperPinkieSlider").onchange = function(event) {
+        theta1[UpperPinkie] =  event.target.value;
+    };
+
+    document.getElementById("LowerRingSlider").onchange = function(event) {
+        theta1[LowerRing] = event.target.value;
+    };
+
+    document.getElementById("UpperRingSlider").onchange = function(event) {
+        theta1[UpperRing] =  event.target.value;
+    };
+
+    document.getElementById("LowerMiddleSlider").onchange = function(event) {
+        theta1[LowerMiddle] = event.target.value;
+    };
+
+    document.getElementById("UpperMiddleSlider").onchange = function(event) {
+        theta1[UpperMiddle] =  event.target.value;
+    };
+
+    document.getElementById("LowerIndexSlider").onchange = function(event) {
+        theta1[LowerIndex] = event.target.value;
+    };
+
+    document.getElementById("UpperIndexSlider").onchange = function(event) {
+        theta1[UpperIndex] =  event.target.value;
+    };
+
+    document.getElementById("LowerThumbSlider").onchange = function(event) {
+        theta1[LowerThumb] =  event.target.value;
+    };
+
+    document.getElementById("UpperThumbSlider").onchange = function(event) {
+        theta1[UpperThumb] =  event.target.value;
+    };
+
+    // Slider for Object 2 (Robot)
+
+    document.getElementById("slider0").onchange = function(event) {
+        theta2[torsoId ] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider1").onchange = function(event) {
+        theta2[head1Id] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider2").onchange = function(event) {
+        theta2[leftUpperArmId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider3").onchange = function(event) {
+        theta2[leftLowerArmId] =  parseInt(event.target.value);
+    };
+
+    document.getElementById("slider4").onchange = function(event) {
+        theta2[rightUpperArmId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider5").onchange = function(event) {
+        theta2[rightLowerArmId] =  parseInt(event.target.value);
+    };
+
+    document.getElementById("slider6").onchange = function(event) {
+        theta2[leftUpperLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider7").onchange = function(event) {
+        theta2[leftLowerLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider8").onchange = function(event) {
+        theta2[rightUpperLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider9").onchange = function(event) {
+        theta2[rightLowerLegId] = parseInt(event.target.value);
+    };
+
+    document.getElementById("slider10").onchange = function(event) {
+        theta2[head2Id] = parseInt(event.target.value);
+    };
+
     document.getElementById("animateButton1").onclick = function() {
+        if (animation) {
+            theta1Animation = theta1.slice();
+            theta1 = theta1NonAnimation.slice();
+            toggleSlider(false);
+        } else {
+            theta1NonAnimation = theta1.slice();
+            theta1 = theta1Animation.slice();
+            toggleSlider(true);
+        }
         animation = !animation;
     };
 
@@ -377,6 +485,21 @@ window.onload = function init() {
     texture = gl.createTexture();
 
     render();
+}
+
+function toggleSlider(state) {
+    document.getElementById("PalmYSlider").disabled = state;
+    document.getElementById("PalmZSlider").disabled = state;
+    document.getElementById("LowerPinkieSlider").disabled = state;
+    document.getElementById("UpperPinkieSlider").disabled = state;
+    document.getElementById("LowerRingSlider").disabled = state;
+    document.getElementById("UpperRingSlider").disabled = state;
+    document.getElementById("LowerMiddleSlider").disabled = state;
+    document.getElementById("UpperMiddleSlider").disabled = state;
+    document.getElementById("LowerIndexSlider").disabled = state;
+    document.getElementById("UpperIndexSlider").disabled = state;
+    document.getElementById("LowerThumbSlider").disabled = state;
+    document.getElementById("UpperThumbSlider").disabled = state;
 }
 
 // Instantiate Object Parts for Object1 (Hand)
