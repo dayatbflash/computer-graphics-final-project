@@ -37,7 +37,7 @@ var modelViewMatrix, projectionMatrix;
 
 var modelViewMatrixLoc;
 
-// Object 1 (Hand)
+// === Object 1 (Hand) ===
 // Default parameters
 
 var thetaHand = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -99,7 +99,7 @@ var countFist = 0;
 var thetaHandNonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var thetaHandAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-// Object 2 (Robot)
+// === Object 2 (Robot) ===
 // angle of each rotation, the order is according to the identifier above
 
 var thetaRobot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -139,7 +139,7 @@ var lowerLegWidth  = 0.9 * robotScale;
 
 // Animation
 
-var robotAnimationFlag = 0;
+var robotAnimationFlag = false;
 var torsoFlag = 0;
 
 // angle that is used for animation
@@ -147,6 +147,38 @@ var angle = 0;
 
 var thetaRobotNonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var thetaRobotAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+// === Object 4 (Cube) ===
+// angle of each rotation, the order is according to the identifier above
+
+var thetaCube = [0, 0, 0];
+
+// Identifier of each object parts
+
+var cubeX = 0;
+var cubeY = 1;
+var cubeZ = 2;
+
+// Animation
+var cubeAnimationFlag = 0;
+var thetaCubeNonAnimation = [0, 0, 0];
+var thetaCubeAnimation = [0, 0, 0];
+
+// === Object 5 (Pyramid) ===
+// angle of each rotation, the order is according to the identifier above
+
+var thetaPyramid = [0, 0, 0];
+
+// Identifier of each object parts
+
+var pyramidX = 0;
+var pyramidY = 1;
+var pyramidZ = 2;
+
+// Animation
+var pyramidAnimationFlag = 0;
+var thetaPyramidNonAnimation = [0, 0, 0];
+var thetaPyramidAnimation = [0, 0, 0];
 
 // Parameters to control the material and lighting
 
@@ -459,6 +491,30 @@ window.onload = function init() {
         thetaRobot[head2Id] = parseInt(event.target.value);
     };
 
+    document.getElementById("CubeXSlider").onchange = function(event) {
+        thetaCube[cubeX] = parseInt(event.target.value);
+    };
+
+    document.getElementById("CubeYSlider").onchange = function(event) {
+        thetaCube[cubeY] = parseInt(event.target.value);
+    };
+
+    document.getElementById("CubeZSlider").onchange = function(event) {
+        thetaCube[cubeZ] = parseInt(event.target.value);
+    };
+
+    document.getElementById("PyramidXSlider").onchange = function(event) {
+        thetaPyramid[pyramidX] = parseInt(event.target.value);
+    };
+
+    document.getElementById("PyramidYSlider").onchange = function(event) {
+        thetaPyramid[pyramidY] = parseInt(event.target.value);
+    };
+
+    document.getElementById("PyramidZSlider").onchange = function(event) {
+        thetaPyramid[pyramidZ] = parseInt(event.target.value);
+    };
+
     document.getElementById("animateButton1").onclick = function() {
         if (handAnimationFlag) {
             thetaHandAnimation = thetaHand.slice();
@@ -483,6 +539,32 @@ window.onload = function init() {
             toggleRobotSlider(true);
         }
         robotAnimationFlag = !robotAnimationFlag;
+    };
+
+    document.getElementById("animateButton4").onclick = function () {
+        if (cubeAnimationFlag) {
+            thetaCubeAnimation = thetaCube.slice();
+            thetaCube = thetaCubeNonAnimation.slice();
+            toggleCubeSlider(false);
+        } else {
+            thetaCubeNonAnimation = thetaCube.slice();
+            thetaCube = thetaCubeAnimation.slice();
+            toggleCubeSlider(true);
+        }
+        cubeAnimationFlag = !cubeAnimationFlag;
+    };
+
+    document.getElementById("animateButton5").onclick = function () {
+        if (pyramidAnimationFlag) {
+            thetaPyramidAnimation = thetaPyramid.slice();
+            thetaPyramid = thetaPyramidNonAnimation.slice();
+            togglePyramidSlider(false);
+        } else {
+            thetaPyramidNonAnimation = thetaPyramid.slice();
+            thetaPyramid = thetaPyramidAnimation.slice();
+            togglePyramidSlider(true);
+        }
+        pyramidAnimationFlag = !pyramidAnimationFlag;
     };
 
     texture = gl.createTexture();
@@ -517,6 +599,18 @@ function toggleRobotSlider(state) {
     document.getElementById("slider8").disabled = state;
     document.getElementById("slider9").disabled = state;
     document.getElementById("slider10").disabled = state;
+}
+
+function toggleCubeSlider(state) {
+    document.getElementById("CubeXSlider").disabled = state;
+    document.getElementById("CubeYSlider").disabled = state;
+    document.getElementById("CubeZSlider").disabled = state;
+}
+
+function togglePyramidSlider(state) {
+    document.getElementById("PyramidXSlider").disabled = state;
+    document.getElementById("PyramidYSlider").disabled = state;
+    document.getElementById("PyramidZSlider").disabled = state;
 }
 
 // Instantiate Object Parts for Object1 (Hand)
@@ -693,7 +787,7 @@ function rightLowerLeg() {
 
 function floor() {
     var s = scale4(30, 0.1, 20);
-    var instanceMatrix = mult(translate(0.0, -5, 0.0),s);
+    var instanceMatrix = mult(translate(0.0, -7, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -701,7 +795,7 @@ function floor() {
 
 function ceiling() {
     var s = scale4(30, 0.1, 20);
-    var instanceMatrix = mult(translate(0.0, 9.5, 0.0),s);
+    var instanceMatrix = mult(translate(0.0, 7, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -709,7 +803,7 @@ function ceiling() {
 
 function leftWall() {
     var s = scale4(20, 18, 0.1);
-    var instanceMatrix = mult(translate(-8, 0.0, 0.0),s);
+    var instanceMatrix = mult(translate(-7, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -717,7 +811,7 @@ function leftWall() {
 
 function rightWall() {
     var s = scale4(20, 18, 0.1);
-    var instanceMatrix = mult(translate(8, 0.0, 0.0),s);
+    var instanceMatrix = mult(translate(7, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -725,7 +819,7 @@ function rightWall() {
 
 function backWall() {
     var s = scale4(30, 18, 0.1);
-    var instanceMatrix = mult(translate(0.0, -5, 0.0),s);
+    var instanceMatrix = mult(translate(0.0, -7, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -810,14 +904,6 @@ function updateAnimation() {
 var render = function() {
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    //Pyramid
-    modelViewMatrix = translate(3,-3,0,0);
-    pyramid();
-
-    //Cube
-    modelViewMatrix = translate(-3,-3,0,0);
-    cube();
 
     // Background
     configureTexture(woodImage);
@@ -1034,6 +1120,30 @@ var render = function() {
         modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[rightLowerLegId], 1, 0, 0));
     }
     rightLowerLeg();
+
+    // Object 4 (Cube)
+    if (cubeAnimationFlag) {
+        thetaCube[cubeX] += 1;
+        thetaCube[cubeY] += 1;
+        thetaCube[cubeZ] += 1;
+    }
+    modelViewMatrix = translate(-3,-3,0,0);
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaCube[cubeX],1,0,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaCube[cubeY],0,1,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaCube[cubeZ],0,0,1));
+    cube();
+
+    // Object 5 (Pyramid)
+    if (pyramidAnimationFlag) {
+        thetaPyramid[pyramidX] += 1;
+        thetaPyramid[pyramidY] += 1;
+        thetaPyramid[pyramidZ] += 1;
+    }
+    modelViewMatrix = translate(3,-3,0,0);
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaPyramid[pyramidX],1,0,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaPyramid[pyramidY],0,1,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(thetaPyramid[pyramidZ],0,0,1));
+    pyramid();
 
     requestAnimFrame(render);
 }
