@@ -746,6 +746,7 @@ function updateThetaFist(delta) {
 }
 
 function updateAnimation() {
+    theta1[PalmY] += 1;
     switch (state) {
         case RIGHT_LEFT:
         if (theta1[PalmZ] == 0) {
