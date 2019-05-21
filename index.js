@@ -785,6 +785,26 @@ function rightLowerLeg() {
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
+// Instantiate Object Parts for Object4 (Cube)
+
+function cube() {
+    var instanceMatrix = scale4(3, 3, 3);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+}
+
+// Instantiate Object Parts for Object5 (Pyramid)
+
+function pyramid() {
+    var instanceMatrix = scale4(3, 3, 3);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
+}
+
+// Instantiate Object Parts for Room
+
 function floor() {
     var s = scale4(30, 0.1, 20);
     var instanceMatrix = mult(translate(0.0, -7, 0.0),s);
@@ -823,20 +843,6 @@ function backWall() {
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-}
-
-function cube() {
-    var instanceMatrix = scale4(3, 3, 3);
-    var t = mult(modelViewMatrix, instanceMatrix);
-    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-}
-
-function pyramid() {
-    var instanceMatrix = scale4(3, 3, 3);
-    var t = mult(modelViewMatrix, instanceMatrix);
-    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
 }
 
 function updateThetaFist(delta) {
