@@ -50,28 +50,30 @@ var UpperThumb = 11;
 
 // Parameters controlling the size of the Arm and Fingers
 
-var PALM_HEIGHT = 3.0;
-var PALM_WIDTH = 4.0;
-var HAND_DEPTH = 0.7;
-var LOWER_FINGER_HEIGHT = 1.7;
-var LOWER_FINGER_WIDTH = 0.7;
-var UPPER_FINGER_WIDTH = 0.6;
-var PINKIE_HEIGHT = 1.5;
-var RING_HEIGHT = 1.7;
-var MIDDLE_HEIGHT = 1.9;
-var INDEX_HEIGHT = 1.7;
-var THUMB_WIDTH = 1.2;
-var LOWER_THUMB_HEIGHT = 0.7;
-var UPPER_THUMB_HEIGHT = 0.6;
+var HAND_SCALE = 0.7;
+
+var PALM_HEIGHT = 3.0 * HAND_SCALE;
+var PALM_WIDTH = 4.0 * HAND_SCALE;
+var HAND_DEPTH = 0.7 * HAND_SCALE;
+var LOWER_FINGER_HEIGHT = 1.7 * HAND_SCALE;
+var LOWER_FINGER_WIDTH = 0.7 * HAND_SCALE;
+var UPPER_FINGER_WIDTH = 0.6 * HAND_SCALE;
+var PINKIE_HEIGHT = 1.5 * HAND_SCALE;
+var RING_HEIGHT = 1.7 * HAND_SCALE;
+var MIDDLE_HEIGHT = 1.9 * HAND_SCALE;
+var INDEX_HEIGHT = 1.7 * HAND_SCALE;
+var THUMB_WIDTH = 1.2 * HAND_SCALE;
+var LOWER_THUMB_HEIGHT = 0.7 * HAND_SCALE;
+var UPPER_THUMB_HEIGHT = 0.6 * HAND_SCALE;
 
 // Parameters controlling the position of fingers
 
-var PINKIE_X = -1.55;
-var RING_X = -0.55;
-var MIDDLE_X = 0.55;
-var INDEX_X = 1.55;
-var THUMB_Y = 1.0;
-var THUMB_X = 0.6;
+var PINKIE_X = -1.55 * HAND_SCALE;
+var RING_X = -0.55 * HAND_SCALE;
+var MIDDLE_X = 0.55 * HAND_SCALE;
+var INDEX_X = 1.55 * HAND_SCALE;
+var THUMB_Y = 1.0 * HAND_SCALE;
+var THUMB_X = 0.6 * HAND_SCALE;
 
 // Animation
 var animation = false;
@@ -110,20 +112,22 @@ var head2Id = 10;
 
 // The size of object parts
 
-var torsoHeight = 5.0;
-var torsoWidth = 3.0;
-var torsoDepth = 1.0;
-var headHeight = 1.5;
-var headWidth = 1.3;
-var headDepth = 1.5;
-var upperArmHeight = 2.4;
-var upperArmWidth  = 0.7;
-var lowerArmHeight = 2.6;
-var lowerArmWidth  = 0.7;
-var upperLegHeight = 2.2;
-var upperLegWidth  = 0.9;
-var lowerLegHeight = 2.8;
-var lowerLegWidth  = 0.9;
+var robotScale = 0.7;
+
+var torsoHeight = 5.0 * robotScale;
+var torsoWidth = 3.0 * robotScale;
+var torsoDepth = 1.0 * robotScale;
+var headHeight = 1.5 * robotScale;
+var headWidth = 1.3 * robotScale;
+var headDepth = 1.5 * robotScale;
+var upperArmHeight = 2.4 * robotScale;
+var upperArmWidth  = 0.7 * robotScale;
+var lowerArmHeight = 2.6 * robotScale;
+var lowerArmWidth  = 0.7 * robotScale;
+var upperLegHeight = 2.2 * robotScale;
+var upperLegWidth  = 0.9 * robotScale;
+var lowerLegHeight = 2.8 * robotScale;
+var lowerLegWidth  = 0.9 * robotScale;
 
 // Animation
 
@@ -646,7 +650,7 @@ var render = function() {
 
     // Palm
     configureTexture(woolImage);
-    modelViewMatrix = translate(-5, 0, 0, 0);
+    modelViewMatrix = translate(-6, 3, 0, 0);
     modelViewMatrix = mult(modelViewMatrix, rotate(theta1[PalmY], 0, 1, 0));
     modelViewMatrix = mult(modelViewMatrix, rotate(theta1[PalmZ], 0, 0, 1));
     temp = modelViewMatrix;
@@ -731,7 +735,7 @@ var render = function() {
 
     // Torso
     configureTexture(woolImage);
-    modelViewMatrix = translate(5, 0, 0, 0);
+    modelViewMatrix = translate(0, 3, 0, 0);
     modelViewMatrix = mult(modelViewMatrix, rotate(theta2[torsoId] + torsoAngle, 0, 1, 0));
     temp = modelViewMatrix;
     torso();
