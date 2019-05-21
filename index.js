@@ -2,9 +2,10 @@
 
 var canvas, gl, program, shadowProgram;
 
-var NumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
+var cubeNumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
+var pyramidNumVertices = 18;
 
-var vertices = [
+var cubeVertices = [
     vec4(-0.5, -0.5,  0.5, 1.0),
     vec4(-0.5,  0.5,  0.5, 1.0),
     vec4(0.5,  0.5,  0.5, 1.0),
@@ -14,6 +15,14 @@ var vertices = [
     vec4(0.5,  0.5, -0.5, 1.0),
     vec4(0.5, -0.5, -0.5, 1.0)
 ];
+
+var pyramidVertices = [
+    vec4(-0.5, -0.5,  0.5, 1.0),
+    vec4(0.5, -0.5,  0.5, 1.0),
+    vec4(-0.5, -0.5, -0.5, 1.0),
+    vec4(0.5, -0.5, -0.5, 1.0),
+    vec4(0.0, 0.5, 0.0, 1.0)
+]
 
 var texCoord = [
     vec2(0, 0),
@@ -166,33 +175,32 @@ var normals = [];
 var texCoords = [];
 
 function quad(a, b, c, d) {
-
-    var t1 = subtract(vertices[b], vertices[a]);
-    var t2 = subtract(vertices[c], vertices[b]);
+    var t1 = subtract(cubeVertices[b], cubeVertices[a]);
+    var t2 = subtract(cubeVertices[c], cubeVertices[b]);
     var normal = cross(t1, t2);
     var normal = vec3(normal);
 
-    points.push(vertices[a]);
+    points.push(cubeVertices[a]);
     normals.push(normal);
     texCoords.push(texCoord[0]);
 
-    points.push(vertices[b]);
+    points.push(cubeVertices[b]);
     normals.push(normal);
     texCoords.push(texCoord[1]);
 
-    points.push(vertices[c]);
+    points.push(cubeVertices[c]);
     normals.push(normal);
     texCoords.push(texCoord[2]);
 
-    points.push(vertices[a]);
+    points.push(cubeVertices[a]);
     normals.push(normal);
     texCoords.push(texCoord[0]);
 
-    points.push(vertices[c]);
+    points.push(cubeVertices[c]);
     normals.push(normal);
     texCoords.push(texCoord[2]);
 
-    points.push(vertices[d]);
+    points.push(cubeVertices[d]);
     normals.push(normal);
     texCoords.push(texCoord[3]);
 }
@@ -214,6 +222,64 @@ function scale4(a, b, c) {
     return result;
 }
 
+function triad(a, b, c) {
+    var t1 = subtract(pyramidVertices[b], pyramidVertices[a]);
+    var t2 = subtract(pyramidVertices[c], pyramidVertices[b]);
+    var normal = cross(t1, t2);
+    var normal = vec3(normal);
+
+    points.push(pyramidVertices[a]);
+    normals.push(normal);
+    texCoords.push(texCoord[0]);
+
+    points.push(pyramidVertices[b]);
+    normals.push(normal);
+    texCoords.push(texCoord[1]);
+
+    points.push(pyramidVertices[c]);
+    normals.push(normal);
+    texCoords.push(texCoord[2]);
+}
+
+function quadPyramid(a, b, c, d) {
+    var t1 = subtract(pyramidVertices[b], pyramidVertices[a]);
+    var t2 = subtract(pyramidVertices[c], pyramidVertices[b]);
+    var normal = cross(t1, t2);
+    var normal = vec3(normal);
+
+    points.push(pyramidVertices[a]);
+    normals.push(normal);
+    texCoords.push(texCoord[0]);
+
+    points.push(pyramidVertices[b]);
+    normals.push(normal);
+    texCoords.push(texCoord[1]);
+
+    points.push(pyramidVertices[c]);
+    normals.push(normal);
+    texCoords.push(texCoord[2]);
+
+    points.push(pyramidVertices[a]);
+    normals.push(normal);
+    texCoords.push(texCoord[0]);
+
+    points.push(pyramidVertices[c]);
+    normals.push(normal);
+    texCoords.push(texCoord[2]);
+
+    points.push(pyramidVertices[d]);
+    normals.push(normal);
+    texCoords.push(texCoord[3]);
+}
+
+function colorPyramid() {
+    quadPyramid(1, 0, 2, 3);
+    triad(0, 1, 4);
+    triad(0, 2, 4);
+    triad(2, 3, 4);
+    triad(1, 3, 4);
+}
+
 function configureTexture(image) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -221,7 +287,7 @@ function configureTexture(image) {
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.uniform1i(gl.getUniformLocation(program, "testure"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 }
 
 window.onload = function init() {
@@ -245,6 +311,7 @@ window.onload = function init() {
     gl.useProgram(program);
 
     colorCube();
+    colorPyramid();
 
     // Create and initialize buffer objects
 
@@ -319,7 +386,7 @@ function palm() {
     var instanceMatrix = mult(translate(0.0, 0.5 * PALM_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function lowerPinkie() {
@@ -327,7 +394,7 @@ function lowerPinkie() {
     var instanceMatrix = mult(translate(PINKIE_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function upperPinkie() {
@@ -335,7 +402,7 @@ function upperPinkie() {
     var instanceMatrix = mult(translate(PINKIE_X, 0.5 * PINKIE_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function lowerRing() {
@@ -343,7 +410,7 @@ function lowerRing() {
     var instanceMatrix = mult(translate(RING_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function upperRing() {
@@ -351,7 +418,7 @@ function upperRing() {
     var instanceMatrix = mult(translate(RING_X, 0.5 * RING_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function lowerMiddle() {
@@ -359,7 +426,7 @@ function lowerMiddle() {
     var instanceMatrix = mult(translate(MIDDLE_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function upperMiddle() {
@@ -367,7 +434,7 @@ function upperMiddle() {
     var instanceMatrix = mult(translate(MIDDLE_X, 0.5 * MIDDLE_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function lowerIndex() {
@@ -375,7 +442,7 @@ function lowerIndex() {
     var instanceMatrix = mult(translate(INDEX_X, 0.5 * LOWER_FINGER_HEIGHT, 0.0), s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function upperIndex() {
@@ -383,7 +450,7 @@ function upperIndex() {
     var instanceMatrix = mult(translate(INDEX_X, 0.5 * INDEX_HEIGHT, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function lowerThumb() {
@@ -391,7 +458,7 @@ function lowerThumb() {
     var instanceMatrix = mult(translate(THUMB_X, THUMB_Y, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function upperThumb() {
@@ -399,7 +466,7 @@ function upperThumb() {
     var instanceMatrix = mult(translate(2*THUMB_X, THUMB_Y, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 // Instantiate Object Parts for Object2 (Robot)
@@ -409,7 +476,7 @@ function torso() {
     var instanceMatrix = mult(translate(0.0, 0.5*torsoHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function head() {
@@ -417,7 +484,7 @@ function head() {
     var instanceMatrix = mult(translate(0.0, 0.5 * headHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftUpperArm() {
@@ -425,7 +492,7 @@ function leftUpperArm() {
     var instanceMatrix = mult(translate(0.5 * upperArmWidth, 0.5 * upperArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftLowerArm() {
@@ -433,7 +500,7 @@ function leftLowerArm() {
     var instanceMatrix = mult(translate(0.5 * lowerArmWidth, 0.5 * lowerArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightUpperArm() {
@@ -441,7 +508,7 @@ function rightUpperArm() {
     var instanceMatrix = mult(translate(-0.5 * upperArmWidth, 0.5 * upperArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightLowerArm() {
@@ -449,7 +516,7 @@ function rightLowerArm() {
     var instanceMatrix = mult(translate(-0.5 * lowerArmWidth, 0.5 * lowerArmHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftUpperLeg() {
@@ -457,7 +524,7 @@ function leftUpperLeg() {
     var instanceMatrix = mult(translate(0.0, 0.6 * upperLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftLowerLeg() {
@@ -465,7 +532,7 @@ function leftLowerLeg() {
     var instanceMatrix = mult(translate(0.0, 0.5 * lowerLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightUpperLeg() {
@@ -473,7 +540,7 @@ function rightUpperLeg() {
     var instanceMatrix = mult(translate(0.0, 0.6 * upperLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightLowerLeg() {
@@ -481,7 +548,7 @@ function rightLowerLeg() {
     var instanceMatrix = mult(translate(0.0, 0.5 * lowerLegHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function floor() {
@@ -489,7 +556,7 @@ function floor() {
     var instanceMatrix = mult(translate(0.0, -5, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function ceiling() {
@@ -497,7 +564,7 @@ function ceiling() {
     var instanceMatrix = mult(translate(0.0, 9.5, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftWall() {
@@ -505,7 +572,7 @@ function leftWall() {
     var instanceMatrix = mult(translate(-8, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightWall() {
@@ -513,7 +580,7 @@ function rightWall() {
     var instanceMatrix = mult(translate(8, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function backWall() {
@@ -521,7 +588,21 @@ function backWall() {
     var instanceMatrix = mult(translate(0.0, -5, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
-    gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+}
+
+function cube() {
+    var instanceMatrix = scale4(3, 3, 3);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+}
+
+function pyramid() {
+    var instanceMatrix = scale4(3, 3, 3);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
 }
 
 function updateThetaFist(delta) {
@@ -588,6 +669,17 @@ function updateAnimation() {
 var render = function() {
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    //Pyramid
+    modelViewMatrix = translate(3,-3,0,0);
+    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,1,0,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,0,1,0));
+    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,0,0,1));
+    pyramid();
+
+    //Cube
+    modelViewMatrix = translate(-3,-3,0,0);
+    cube();
 
     // Background
     configureTexture(woodImage);
