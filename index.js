@@ -87,9 +87,6 @@ var FIST = 2;
 var directionFist = 1;
 var countFist = 0;
 
-var theta1NonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var theta1Animation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
 // Object 2 (Robot)
 // angle of each rotation, the order is according to the identifier above
 
@@ -298,15 +295,6 @@ window.onload = function init() {
     woodImage = document.getElementById("wood-texture");
 
     document.getElementById("animateButton1").onclick = function() {
-        if (animation) {
-            theta1Animation = theta1.slice();
-            theta1 = theta1NonAnimation.slice();
-            toggleSlider(false);
-        } else {
-            theta1NonAnimation = theta1.slice();
-            theta1 = theta1Animation.slice();
-            toggleSlider(true);
-        }
         animation = !animation;
     };
 
@@ -322,21 +310,6 @@ window.onload = function init() {
     texture = gl.createTexture();
 
     render();
-}
-
-function toggleSlider(state) {
-    document.getElementById("PalmYSlider").disabled = state;
-    document.getElementById("PalmZSlider").disabled = state;
-    document.getElementById("LowerPinkieSlider").disabled = state;
-    document.getElementById("UpperPinkieSlider").disabled = state;
-    document.getElementById("LowerRingSlider").disabled = state;
-    document.getElementById("UpperRingSlider").disabled = state;
-    document.getElementById("LowerMiddleSlider").disabled = state;
-    document.getElementById("UpperMiddleSlider").disabled = state;
-    document.getElementById("LowerIndexSlider").disabled = state;
-    document.getElementById("UpperIndexSlider").disabled = state;
-    document.getElementById("LowerThumbSlider").disabled = state;
-    document.getElementById("UpperThumbSlider").disabled = state;
 }
 
 // Instantiate Object Parts for Object1 (Hand)
