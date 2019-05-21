@@ -248,6 +248,8 @@ var woolImage;
 var wallImage;
 var texture;
 var redTexture;
+var pyramidTexture;
+var cubeTexture;
 
 // Parameters for GL Buffer
 
@@ -456,7 +458,9 @@ window.onload = function init() {
     metalicImage = document.getElementById("metalic-texture");
     woolImage = document.getElementById("wool-texture");
     wallImage = document.getElementById("wall-texture");
-    redTexture = document.getElementById("red-texture")
+    redTexture = document.getElementById("red-texture");
+    pyramidTexture = document.getElementById("pyramid-texture");
+    cubeTexture = document.getElementById("cube-texture");
 
     // Slider for Object 1 (Hand)
 
@@ -1466,6 +1470,7 @@ var render = function() {
     }
 
     // Torso
+    configureTexture(woolImage);
     modelViewMatrix = translate(6, 3, 0, 0);
     modelViewMatrix = mult(modelViewMatrix, rotate(thetaDino[dinoTorsoId] - 90, 0, 1, 0));
     temp = modelViewMatrix;
@@ -1473,6 +1478,7 @@ var render = function() {
     dinoTorso();
 
     // Head
+    configureTexture(metalicImage);
     modelViewMatrix = temp;
     if (dinoAnimationFlag) {
         modelViewMatrix = mult(modelViewMatrix, rotate(45 * Math.sin(thetaDino[dinoHeadId]), 0, 1, 0));
@@ -1554,6 +1560,7 @@ var render = function() {
         thetaCube[cubeY] += 1;
         thetaCube[cubeZ] += 1;
     }
+    configureTexture(cubeTexture);
     modelViewMatrix = translate(-3,-3,0,0);
     modelViewMatrix = mult(modelViewMatrix,rotate(thetaCube[cubeX],1,0,0));
     modelViewMatrix = mult(modelViewMatrix,rotate(thetaCube[cubeY],0,1,0));
@@ -1566,6 +1573,7 @@ var render = function() {
         thetaPyramid[pyramidY] += 1;
         thetaPyramid[pyramidZ] += 1;
     }
+    configureTexture(pyramidTexture);
     modelViewMatrix = translate(3,-3,0,0);
     modelViewMatrix = mult(modelViewMatrix,rotate(thetaPyramid[pyramidX],1,0,0));
     modelViewMatrix = mult(modelViewMatrix,rotate(thetaPyramid[pyramidY],0,1,0));
