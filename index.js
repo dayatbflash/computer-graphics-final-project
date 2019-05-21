@@ -40,7 +40,7 @@ var modelViewMatrixLoc;
 // Object 1 (Hand)
 // Default parameters
 
-var theta1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaHand = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // Array of rotation angles (in degrees) for each rotation axis
 
@@ -85,7 +85,7 @@ var THUMB_Y = 1.0 * HAND_SCALE;
 var THUMB_X = 0.6 * HAND_SCALE;
 
 // Animation
-var animation = false;
+var handAnimationFlag = false;
 var state = 1;
 
 var RIGHT_LEFT = 1;
@@ -96,18 +96,17 @@ var FIST = 2;
 var directionFist = 1;
 var countFist = 0;
 
-var theta1NonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var theta1Animation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaHandNonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaHandAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // Object 2 (Robot)
 // angle of each rotation, the order is according to the identifier above
 
-var theta2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaRobot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // Identifier of each object parts
 
 var torsoId = 0;
-var headId  = 1;
 var head1Id = 1;
 var leftUpperArmId = 2;
 var leftLowerArmId = 3;
@@ -140,14 +139,14 @@ var lowerLegWidth  = 0.9 * robotScale;
 
 // Animation
 
-var flag = 0;
+var robotAnimationFlag = 0;
 var torsoFlag = 0;
 
 // angle that is used for animation
 var angle = 0;
 
-// angle that is used to rotate the whole object
-var torsoAngle = 0;
+var thetaRobotNonAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaRobotAnimation = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // Parameters to control the material and lighting
 
@@ -367,119 +366,123 @@ window.onload = function init() {
     // Slider for Object 1 (Hand)
 
     document.getElementById("PalmYSlider").onchange = function(event) {
-        theta1[PalmY] = event.target.value;
+        thetaHand[PalmY] = event.target.value;
     };
 
     document.getElementById("PalmZSlider").onchange = function(event) {
-        theta1[PalmZ] = event.target.value;
+        thetaHand[PalmZ] = event.target.value;
     };
 
     document.getElementById("LowerPinkieSlider").onchange = function(event) {
-        theta1[LowerPinkie] = event.target.value;
+        thetaHand[LowerPinkie] = event.target.value;
     };
 
     document.getElementById("UpperPinkieSlider").onchange = function(event) {
-        theta1[UpperPinkie] =  event.target.value;
+        thetaHand[UpperPinkie] =  event.target.value;
     };
 
     document.getElementById("LowerRingSlider").onchange = function(event) {
-        theta1[LowerRing] = event.target.value;
+        thetaHand[LowerRing] = event.target.value;
     };
 
     document.getElementById("UpperRingSlider").onchange = function(event) {
-        theta1[UpperRing] =  event.target.value;
+        thetaHand[UpperRing] =  event.target.value;
     };
 
     document.getElementById("LowerMiddleSlider").onchange = function(event) {
-        theta1[LowerMiddle] = event.target.value;
+        thetaHand[LowerMiddle] = event.target.value;
     };
 
     document.getElementById("UpperMiddleSlider").onchange = function(event) {
-        theta1[UpperMiddle] =  event.target.value;
+        thetaHand[UpperMiddle] =  event.target.value;
     };
 
     document.getElementById("LowerIndexSlider").onchange = function(event) {
-        theta1[LowerIndex] = event.target.value;
+        thetaHand[LowerIndex] = event.target.value;
     };
 
     document.getElementById("UpperIndexSlider").onchange = function(event) {
-        theta1[UpperIndex] =  event.target.value;
+        thetaHand[UpperIndex] =  event.target.value;
     };
 
     document.getElementById("LowerThumbSlider").onchange = function(event) {
-        theta1[LowerThumb] =  event.target.value;
+        thetaHand[LowerThumb] =  event.target.value;
     };
 
     document.getElementById("UpperThumbSlider").onchange = function(event) {
-        theta1[UpperThumb] =  event.target.value;
+        thetaHand[UpperThumb] =  event.target.value;
     };
 
     // Slider for Object 2 (Robot)
 
     document.getElementById("slider0").onchange = function(event) {
-        theta2[torsoId ] = parseInt(event.target.value);
+        thetaRobot[torsoId ] = parseInt(event.target.value);
     };
 
     document.getElementById("slider1").onchange = function(event) {
-        theta2[head1Id] = parseInt(event.target.value);
+        thetaRobot[head1Id] = parseInt(event.target.value);
     };
 
     document.getElementById("slider2").onchange = function(event) {
-        theta2[leftUpperArmId] = parseInt(event.target.value);
+        thetaRobot[leftUpperArmId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider3").onchange = function(event) {
-        theta2[leftLowerArmId] =  parseInt(event.target.value);
+        thetaRobot[leftLowerArmId] =  parseInt(event.target.value);
     };
 
     document.getElementById("slider4").onchange = function(event) {
-        theta2[rightUpperArmId] = parseInt(event.target.value);
+        thetaRobot[rightUpperArmId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider5").onchange = function(event) {
-        theta2[rightLowerArmId] =  parseInt(event.target.value);
+        thetaRobot[rightLowerArmId] =  parseInt(event.target.value);
     };
 
     document.getElementById("slider6").onchange = function(event) {
-        theta2[leftUpperLegId] = parseInt(event.target.value);
+        thetaRobot[leftUpperLegId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider7").onchange = function(event) {
-        theta2[leftLowerLegId] = parseInt(event.target.value);
+        thetaRobot[leftLowerLegId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider8").onchange = function(event) {
-        theta2[rightUpperLegId] = parseInt(event.target.value);
+        thetaRobot[rightUpperLegId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider9").onchange = function(event) {
-        theta2[rightLowerLegId] = parseInt(event.target.value);
+        thetaRobot[rightLowerLegId] = parseInt(event.target.value);
     };
 
     document.getElementById("slider10").onchange = function(event) {
-        theta2[head2Id] = parseInt(event.target.value);
+        thetaRobot[head2Id] = parseInt(event.target.value);
     };
 
     document.getElementById("animateButton1").onclick = function() {
-        if (animation) {
-            theta1Animation = theta1.slice();
-            theta1 = theta1NonAnimation.slice();
-            toggleSlider(false);
+        if (handAnimationFlag) {
+            thetaHandAnimation = thetaHand.slice();
+            thetaHand = thetaHandNonAnimation.slice();
+            toggleHandSlider(false);
         } else {
-            theta1NonAnimation = theta1.slice();
-            theta1 = theta1Animation.slice();
-            toggleSlider(true);
+            thetaHandNonAnimation = thetaHand.slice();
+            thetaHand = thetaHandAnimation.slice();
+            toggleHandSlider(true);
         }
-        animation = !animation;
+        handAnimationFlag = !handAnimationFlag;
     };
 
     document.getElementById("animateButton2").onclick = function () {
-        flag = !flag;
-        angle = 0;
-    };
-
-    document.getElementById("rotateButton").onclick = function () {
-        torsoFlag = !torsoFlag;
+        if (robotAnimationFlag) {
+            thetaRobotAnimation = thetaRobot.slice();
+            thetaRobot = thetaRobotNonAnimation.slice();
+            toggleRobotSlider(false);
+        } else {
+            thetaRobotNonAnimation = thetaRobot.slice();
+            thetaRobot = thetaRobotAnimation.slice();
+            toggleRobotSlider(true);
+        }
+        robotAnimationFlag = !robotAnimationFlag;
     };
 
     texture = gl.createTexture();
@@ -487,7 +490,7 @@ window.onload = function init() {
     render();
 }
 
-function toggleSlider(state) {
+function toggleHandSlider(state) {
     document.getElementById("PalmYSlider").disabled = state;
     document.getElementById("PalmZSlider").disabled = state;
     document.getElementById("LowerPinkieSlider").disabled = state;
@@ -500,6 +503,20 @@ function toggleSlider(state) {
     document.getElementById("UpperIndexSlider").disabled = state;
     document.getElementById("LowerThumbSlider").disabled = state;
     document.getElementById("UpperThumbSlider").disabled = state;
+}
+
+function toggleRobotSlider(state) {
+    document.getElementById("slider0").disabled = state;
+    document.getElementById("slider1").disabled = state;
+    document.getElementById("slider2").disabled = state;
+    document.getElementById("slider3").disabled = state;
+    document.getElementById("slider4").disabled = state;
+    document.getElementById("slider5").disabled = state;
+    document.getElementById("slider6").disabled = state;
+    document.getElementById("slider7").disabled = state;
+    document.getElementById("slider8").disabled = state;
+    document.getElementById("slider9").disabled = state;
+    document.getElementById("slider10").disabled = state;
 }
 
 // Instantiate Object Parts for Object1 (Hand)
@@ -729,27 +746,27 @@ function pyramid() {
 }
 
 function updateThetaFist(delta) {
-    theta1[LowerPinkie] += delta;
-    theta1[UpperPinkie] += delta;
+    thetaHand[LowerPinkie] += delta;
+    thetaHand[UpperPinkie] += delta;
 
-    theta1[LowerRing] += delta;
-    theta1[UpperRing] += delta;
+    thetaHand[LowerRing] += delta;
+    thetaHand[UpperRing] += delta;
 
-    theta1[LowerMiddle] += delta;
-    theta1[UpperMiddle] += delta;
+    thetaHand[LowerMiddle] += delta;
+    thetaHand[UpperMiddle] += delta;
 
-    theta1[LowerIndex] += delta;
-    theta1[UpperIndex] += delta;
+    thetaHand[LowerIndex] += delta;
+    thetaHand[UpperIndex] += delta;
 
-    theta1[LowerThumb] += delta;
-    theta1[UpperThumb] += delta;
+    thetaHand[LowerThumb] += delta;
+    thetaHand[UpperThumb] += delta;
 }
 
 function updateAnimation() {
-    theta1[PalmY] += 1;
+    thetaHand[PalmY] += 1;
     switch (state) {
         case RIGHT_LEFT:
-        if (theta1[PalmZ] == 0) {
+        if (thetaHand[PalmZ] == 0) {
             countRL++;
 
             if (countRL == 3) {
@@ -759,15 +776,15 @@ function updateAnimation() {
             }
         }
 
-        theta1[PalmZ] += directionRL;
+        thetaHand[PalmZ] += directionRL;
 
-        if (Math.abs(theta1[PalmZ]) == 45) {
+        if (Math.abs(thetaHand[PalmZ]) == 45) {
             directionRL = -directionRL;
         }
         break;
 
         case FIST:
-        if (theta1[LowerPinkie] == 0) {
+        if (thetaHand[LowerPinkie] == 0) {
             countFist++;
 
             if (countFist == 3) {
@@ -779,7 +796,7 @@ function updateAnimation() {
 
         updateThetaFist(directionFist);
 
-        if (theta1[LowerPinkie] == 90 || theta1[LowerPinkie] == 0) {
+        if (thetaHand[LowerPinkie] == 90 || thetaHand[LowerPinkie] == 0) {
             directionFist = -directionFist;
         }
         break;
@@ -796,9 +813,6 @@ var render = function() {
 
     //Pyramid
     modelViewMatrix = translate(3,-3,0,0);
-    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,1,0,0));
-    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,0,1,0));
-    modelViewMatrix = mult(modelViewMatrix,rotate(angle*100,0,0,1));
     pyramid();
 
     //Cube
@@ -831,7 +845,7 @@ var render = function() {
 
     // Object 1 (Hand)
 
-    if (animation) {
+    if (handAnimationFlag) {
         updateAnimation();
     }
 
@@ -840,20 +854,20 @@ var render = function() {
     // Palm
     configureTexture(woolImage);
     modelViewMatrix = translate(-6, 3, 0, 0);
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[PalmY], 0, 1, 0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[PalmZ], 0, 0, 1));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[PalmY], 0, 1, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[PalmZ], 0, 0, 1));
     temp = modelViewMatrix;
     palm();
 
     // Index Finger
     configureTexture(lowerFingerImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, PALM_HEIGHT, 0.0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[LowerPinkie], 1, 0, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[LowerPinkie], 1, 0, 0));
     lowerPinkie();
 
     configureTexture(metalicImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.0, LOWER_FINGER_HEIGHT, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(theta1[UpperPinkie], 1, 0, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(thetaHand[UpperPinkie], 1, 0, 0));
     upperPinkie();
 
     // Ring Finger
@@ -861,12 +875,12 @@ var render = function() {
 
     configureTexture(lowerFingerImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, PALM_HEIGHT, 0.0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[LowerRing], 1, 0, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[LowerRing], 1, 0, 0));
     lowerRing();
 
     configureTexture(metalicImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.0, LOWER_FINGER_HEIGHT, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(theta1[UpperRing], 1, 0, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(thetaHand[UpperRing], 1, 0, 0));
     upperRing();
 
     // Middle Finger
@@ -874,12 +888,12 @@ var render = function() {
 
     configureTexture(lowerFingerImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, PALM_HEIGHT, 0.0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[LowerMiddle], 1, 0, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[LowerMiddle], 1, 0, 0));
     lowerMiddle();
 
     configureTexture(metalicImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.0, LOWER_FINGER_HEIGHT, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(theta1[UpperMiddle], 1, 0, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(thetaHand[UpperMiddle], 1, 0, 0));
     upperMiddle();
 
     // Index Finger
@@ -887,12 +901,12 @@ var render = function() {
 
     configureTexture(lowerFingerImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, PALM_HEIGHT, 0.0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta1[LowerIndex], 1, 0, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaHand[LowerIndex], 1, 0, 0));
     lowerIndex();
 
     configureTexture(metalicImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.0, LOWER_FINGER_HEIGHT, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(theta1[UpperIndex], 1, 0, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(thetaHand[UpperIndex], 1, 0, 0));
     upperIndex();
 
     // Thumb
@@ -900,40 +914,40 @@ var render = function() {
 
     configureTexture(lowerFingerImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.5 * PALM_WIDTH, 0.0, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(-theta1[LowerThumb], 0, 1, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(-thetaHand[LowerThumb], 0, 1, 0));
     lowerThumb();
 
     configureTexture(metalicImage);
     modelViewMatrix  = mult(modelViewMatrix, translate(0.5 * THUMB_WIDTH, 0.0, 0.0));
-    modelViewMatrix  = mult(modelViewMatrix, rotate(-theta1[UpperThumb], 0, 1, 0));
+    modelViewMatrix  = mult(modelViewMatrix, rotate(-thetaHand[UpperThumb], 0, 1, 0));
     upperThumb();
 
     // Object 2 (Robot)
 
-    if (flag){
-        angle += 0.02;
-    }
-
-    // change the angle for object rotation
-    if (torsoFlag){
-        torsoAngle += 0.3;
-        if (torsoAngle == 2*Math.PI) {
-            torsoAngle = 0
-        }
+    if (robotAnimationFlag){
+        thetaRobot[torsoId] += 1;
+        thetaRobot[leftUpperArmId] += 0.1;
+        thetaRobot[leftLowerArmId] += 0.1;
+        thetaRobot[rightUpperArmId] += 0.1;
+        thetaRobot[rightLowerArmId] += 0.1;
+        thetaRobot[leftUpperLegId] += 0.1;
+        thetaRobot[leftLowerLegId] += 0.1;
+        thetaRobot[rightUpperLegId] += 0.1;
+        thetaRobot[rightLowerLegId] += 0.1;
     }
 
     // Torso
     configureTexture(woolImage);
     modelViewMatrix = translate(0, 3, 0, 0);
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta2[torsoId] + torsoAngle, 0, 1, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[torsoId], 0, 1, 0));
     temp = modelViewMatrix;
     torso();
 
     // Head
     configureTexture(metalicImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, torsoHeight+0.5*headHeight, 0.0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(-theta2[head1Id], 1, 0, 0));
-    modelViewMatrix = mult(modelViewMatrix, rotate(theta2[head2Id], 0, 1, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(-thetaRobot[head1Id], 1, 0, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[head2Id], 0, 1, 0));
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, -0.5*headHeight, 0.0));
     head();
 
@@ -942,19 +956,19 @@ var render = function() {
 
     configureTexture(woolImage);
     modelViewMatrix = mult(modelViewMatrix, translate(-(0.5*torsoWidth + upperArmWidth), 0.9*torsoHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - 15*Math.sin(angle), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - 15*Math.sin(thetaRobot[leftUpperArmId]), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - theta2[leftUpperArmId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - thetaRobot[leftUpperArmId], 1, 0, 0));
     }
     leftUpperArm();
 
     configureTexture(metalicImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, upperArmHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(-Math.abs(10*Math.sin(angle)), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(-Math.abs(10*Math.sin(thetaRobot[leftLowerArmId])), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(-theta2[leftLowerArmId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(-thetaRobot[leftLowerArmId], 1, 0, 0));
     }
     leftLowerArm();
 
@@ -963,19 +977,19 @@ var render = function() {
 
     configureTexture(woolImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.5*torsoWidth + upperArmWidth, 0.9*torsoHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 + 15*Math.sin(angle), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 + 15*Math.sin(thetaRobot[rightUpperArmId]), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - theta2[rightUpperArmId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - thetaRobot[rightUpperArmId], 1, 0, 0));
     }
     rightUpperArm();
 
     configureTexture(metalicImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, upperArmHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(-Math.abs(10*Math.sin(angle)), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(-Math.abs(10*Math.sin(thetaRobot[rightLowerArmId])), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(-theta2[rightLowerArmId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(-thetaRobot[rightLowerArmId], 1, 0, 0));
     }
     rightLowerArm();
 
@@ -984,19 +998,19 @@ var render = function() {
 
     configureTexture(jeansImage);
     modelViewMatrix = mult(modelViewMatrix, translate(-(0.3*torsoWidth), 0.1*upperLegHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 + 10*Math.sin(angle), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 + 10*Math.sin(thetaRobot[leftUpperLegId]), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - theta2[leftUpperLegId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - thetaRobot[leftUpperLegId], 1, 0, 0));
     }
     leftUpperLeg();
 
     configureTexture(metalicImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, upperLegHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(Math.abs(10 + 20*Math.sin(angle)), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(Math.abs(10 + 20*Math.sin(thetaRobot[leftLowerLegId])), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(theta2[leftLowerLegId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[leftLowerLegId], 1, 0, 0));
     }
     leftLowerLeg();
 
@@ -1005,19 +1019,19 @@ var render = function() {
 
     configureTexture(jeansImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.3*torsoWidth, 0.1*upperLegHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - 10*Math.sin(angle), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - 10*Math.sin(thetaRobot[rightUpperLegId]), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(180 - theta2[rightUpperLegId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(180 - thetaRobot[rightUpperLegId], 1, 0, 0));
     }
     rightUpperLeg();
 
     configureTexture(metalicImage);
     modelViewMatrix = mult(modelViewMatrix, translate(0.0, upperLegHeight, 0.0));
-    if (flag) {
-        modelViewMatrix = mult(modelViewMatrix, rotate(Math.abs(10 - 20*Math.sin(angle)), 1, 0, 0));
+    if (robotAnimationFlag) {
+        modelViewMatrix = mult(modelViewMatrix, rotate(Math.abs(10 - 20*Math.sin(thetaRobot[rightLowerLegId])), 1, 0, 0));
     } else {
-        modelViewMatrix = mult(modelViewMatrix, rotate(theta2[rightLowerLegId], 1, 0, 0));
+        modelViewMatrix = mult(modelViewMatrix, rotate(thetaRobot[rightLowerLegId], 1, 0, 0));
     }
     rightLowerLeg();
 
