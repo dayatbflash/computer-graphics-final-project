@@ -229,7 +229,7 @@ var thetaPyramidAnimation = [0, 0, 0];
 
 // Parameters to control the material and lighting
 
-var lightPosition = vec4(0.5, 0.5, 15.0, 0.0);
+var lightPosition = vec4(0.0, 30.0, 30.0, 0.0);
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -238,6 +238,9 @@ var materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
 var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 var materialShininess = 100.0;
+
+var look;
+var perspectiveConstant;
 
 // Parameters for texture and image
 
@@ -450,7 +453,14 @@ window.onload = function init() {
 
     gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
-    projectionMatrix = ortho(-10, 10, -10, 10, -10, 10);
+    look = lookAt(
+        vec3(0.0, 0.0, 20),
+        vec3(0,0,0),
+        vec3(0,1,0)
+    )
+    let aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    perspectiveConstant = perspective(70.0, aspect, 1.0, 100.0)
+    projectionMatrix = mult(perspectiveConstant, look);
     gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
 
     jeansImage = document.getElementById("jeans-texture");
@@ -1134,40 +1144,40 @@ function pyramid() {
 // Instantiate Object Parts for Room
 
 function floor() {
-    var s = scale4(30, 0.1, 20);
-    var instanceMatrix = mult(translate(0.0, -7, 0.0),s);
+    var s = scale4(30, 1, 30);
+    var instanceMatrix = mult(translate(0.0, -15, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function ceiling() {
-    var s = scale4(30, 0.1, 20);
-    var instanceMatrix = mult(translate(0.0, 7, 0.0),s);
+    var s = scale4(30, 1, 30);
+    var instanceMatrix = mult(translate(0.0, 15, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftWall() {
-    var s = scale4(20, 18, 0.1);
-    var instanceMatrix = mult(translate(-7, 0.0, 0.0),s);
+    var s = scale4(1, 30, 30);
+    var instanceMatrix = mult(translate(-15, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightWall() {
-    var s = scale4(20, 18, 0.1);
-    var instanceMatrix = mult(translate(7, 0.0, 0.0),s);
+    var s = scale4(1, 30, 30);
+    var instanceMatrix = mult(translate(15, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function backWall() {
-    var s = scale4(30, 18, 0.1);
-    var instanceMatrix = mult(translate(0.0, -7, 0.0),s);
+    var s = scale4(30, 30, 1);
+    var instanceMatrix = mult(translate(0.0, 0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -1242,25 +1252,23 @@ var render = function() {
     // Background
     forcedConfigureTexture(wallImage);
     // Floor
-    modelViewMatrix = rotate(20,1,0,0);
+    modelViewMatrix = translate(0,0,0,0);
     floor();
 
     // Ceiling
-    modelViewMatrix = rotate(-20,1,0,0);
+    modelViewMatrix = translate(0,0,0,0);
     ceiling();
 
     // Left Wall
-    modelViewMatrix = translate(-5,1,-10,0);
-    modelViewMatrix = mult(modelViewMatrix,rotate(60,0,1,0));
+    modelViewMatrix = translate(0,0,0,0);
     leftWall();
 
     // Right Wall
-    modelViewMatrix = translate(5,1,-10,0);
-    modelViewMatrix = mult(modelViewMatrix,rotate(-60,0,1,0));
+    modelViewMatrix = translate(0,0,0,0);
     rightWall();
 
     // Back Wall
-    modelViewMatrix = translate(0,11.5,-10,0);
+    modelViewMatrix = translate(0,0,-15,0);
     backWall();
 
     // Object 1 (Hand)
