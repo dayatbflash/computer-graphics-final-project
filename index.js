@@ -1,6 +1,6 @@
 "use strict";
 
-var canvas, gl, program, shadowProgram;
+var canvas, gl, program, shadowProgramYp, shadowProgramYm, shadowProgramXp, shadowProgramXm, shadowProgramZp, shadowProgramZm;
 
 var cubeNumVertices = 36; //(6 faces)(2 triangles/face)(3 vertices/triangle)
 var pyramidNumVertices = 18;
@@ -229,7 +229,8 @@ var thetaPyramidAnimation = [0, 0, 0];
 
 // Parameters to control the material and lighting
 
-var lightPosition = vec4(0.0, 30.0, 30.0, 0.0);
+var lightPosition = vec4(0.0, 0.0, 50.0, 0.0);
+var pointLightPosition = vec4(-10, -10, 10, 0);
 var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -239,8 +240,10 @@ var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 var materialShininess = 100.0;
 
-var eye = vec3(0, 0, 20);
+var eye = vec3(0, 10, 30);
 var perspectiveConstant;
+var isMainCameraMode = true;
+var modelViewMatrixSYmLoc, modelViewMatrixSYpLoc, modelViewMatrixSXpLoc, modelViewMatrixSZpLoc, modelViewMatrixSZmLoc, modelViewMatrixSXmLoc;
 
 // Parameters for texture and image
 
@@ -400,14 +403,18 @@ window.onload = function init() {
 
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
     // Load shaders and initialize attribute buffers
 
     program = initShaders(gl, "vertex-shader", "fragment-shader");
-
-    shadowProgram = initShaders(gl, "vertex-shadow", "fragment-shadow");
+    shadowProgramYp = initShaders(gl, "vertex-shadowyp", "fragment-shadow");
+    shadowProgramYm = initShaders(gl, "vertex-shadowym", "fragment-shadow");
+    shadowProgramXp = initShaders(gl, "vertex-shadowxp", "fragment-shadow");
+    shadowProgramXm = initShaders(gl, "vertex-shadowxm", "fragment-shadow");
+    shadowProgramZp = initShaders(gl, "vertex-shadowzp", "fragment-shadow");
+    shadowProgramZm = initShaders(gl, "vertex-shadowzm", "fragment-shadow");
 
     gl.useProgram(program);
 
@@ -459,9 +466,89 @@ window.onload = function init() {
         vec3(0,1,0)
     )
     let aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    perspectiveConstant = perspective(70.0, aspect, 1.0, 100.0)
+    perspectiveConstant = perspective(70.0, aspect, 1.0, 1000.0)
     projectionMatrix = mult(perspectiveConstant, look);
     gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
+
+
+    gl.useProgram(shadowProgramYp);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramYp, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSYpLoc = gl.getUniformLocation(shadowProgramYp, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramYp, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramYp, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramYp, "light"), 1);
+
+    gl.useProgram(shadowProgramYm);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramYm, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSYmLoc = gl.getUniformLocation(shadowProgramYm, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramYm, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramYm, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramYm, "light"), 1);
+
+    gl.useProgram(shadowProgramXp);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramXp, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSXpLoc = gl.getUniformLocation(shadowProgramXp, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramXp, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramXp, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramXp, "light"), 1);
+
+    gl.useProgram(shadowProgramXm);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramXm, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSXmLoc = gl.getUniformLocation(shadowProgramXm, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramXm, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramXm, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramXm, "light"), 1);
+
+
+    gl.useProgram(shadowProgramZp);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramZp, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSZpLoc = gl.getUniformLocation(shadowProgramZp, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramZp, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramZp, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramZp, "light"), 1);
+
+    gl.useProgram(shadowProgramZm);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    var vPosition = gl.getAttribLocation( shadowProgramZm, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    modelViewMatrixSZmLoc = gl.getUniformLocation(shadowProgramZm, "modelViewMatrix");
+    gl.uniformMatrix4fv( gl.getUniformLocation(shadowProgramZm, "projectionMatrix"),  false, flatten(projectionMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramZm, "lightPosition"),
+       flatten(lightPosition) );
+    gl.uniform1i(gl.getUniformLocation(shadowProgramZm, "light"), 1);
 
     jeansImage = document.getElementById("jeans-texture");
     lowerFingerImage = document.getElementById("lower-finger-texture");
@@ -779,6 +866,7 @@ function palm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -791,6 +879,7 @@ function lowerPinkie() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -803,6 +892,7 @@ function upperPinkie() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -815,6 +905,7 @@ function lowerRing() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -827,6 +918,7 @@ function upperRing() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -839,6 +931,7 @@ function lowerMiddle() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -851,6 +944,7 @@ function upperMiddle() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -863,6 +957,7 @@ function lowerIndex() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -875,6 +970,7 @@ function upperIndex() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -887,6 +983,7 @@ function lowerThumb() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -899,6 +996,7 @@ function upperThumb() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -913,6 +1011,8 @@ function torso() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -925,9 +1025,52 @@ function head() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+}
+
+function drawShadow(t, startIndex = 0, EndIndex = cubeNumVertices) {
+
+    gl.useProgram(shadowProgramYp);
+    gl.uniformMatrix4fv(modelViewMatrixSYpLoc, false, flatten(t) );
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramYp, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(shadowProgramYm);
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramYm, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.uniformMatrix4fv(modelViewMatrixSYmLoc, false, flatten(t) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(shadowProgramXp);
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramXp, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.uniformMatrix4fv(modelViewMatrixSXpLoc, false, flatten(t) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(shadowProgramXm);
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramXm, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.uniformMatrix4fv(modelViewMatrixSXmLoc, false, flatten(t) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(shadowProgramZp);
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramZp, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.uniformMatrix4fv(modelViewMatrixSZpLoc, false, flatten(t) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(shadowProgramZm);
+    gl.uniform4fv(gl.getUniformLocation(shadowProgramZm, "lightPosition"),
+       flatten(pointLightPosition) );
+    gl.uniformMatrix4fv(modelViewMatrixSZmLoc, false, flatten(t) );
+    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
+
+    gl.useProgram(program);
 }
 
 function leftUpperArm() {
@@ -937,6 +1080,7 @@ function leftUpperArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -949,6 +1093,7 @@ function leftLowerArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -961,6 +1106,7 @@ function rightUpperArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -973,6 +1119,7 @@ function rightLowerArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -985,6 +1132,7 @@ function leftUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -997,6 +1145,7 @@ function leftLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1009,6 +1158,7 @@ function rightUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1021,6 +1171,7 @@ function rightLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1035,6 +1186,7 @@ function dinoTorso() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1047,6 +1199,7 @@ function dinoHead() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1058,6 +1211,7 @@ function dinoLeftUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1070,6 +1224,7 @@ function dinoLeftLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1081,6 +1236,7 @@ function dinoRightUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1093,6 +1249,7 @@ function dinoRightLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1105,6 +1262,7 @@ function dinoTail1() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1117,6 +1275,7 @@ function dinoTail2() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1129,6 +1288,7 @@ function dinoTail3() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1142,6 +1302,7 @@ function cube() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1155,6 +1316,7 @@ function pyramid() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
+        drawShadow(t, cubeNumVertices, pyramidNumVertices);
     } else {
         for(var i=cubeNumVertices; i<cubeNumVertices+pyramidNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
@@ -1163,40 +1325,40 @@ function pyramid() {
 // Instantiate Object Parts for Room
 
 function floor() {
-    var s = scale4(30, 1, 30);
-    var instanceMatrix = mult(translate(0.0, -15, 0.0),s);
+    var s = scale4(31.2, 1, 31.2);
+    var instanceMatrix = mult(translate(0.0, -15.6, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function ceiling() {
-    var s = scale4(30, 1, 30);
-    var instanceMatrix = mult(translate(0.0, 15, 0.0),s);
+    var s = scale4(31.2, 1, 31.2);
+    var instanceMatrix = mult(translate(0.0, 15.6, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function leftWall() {
-    var s = scale4(1, 30, 30);
-    var instanceMatrix = mult(translate(-15, 0.0, 0.0),s);
+    var s = scale4(1, 31.2, 31.2);
+    var instanceMatrix = mult(translate(-15.6, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function rightWall() {
-    var s = scale4(1, 30, 30);
-    var instanceMatrix = mult(translate(15, 0.0, 0.0),s);
+    var s = scale4(1, 31.2, 31.2);
+    var instanceMatrix = mult(translate(15.6, 0.0, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
 function backWall() {
-    var s = scale4(30, 30, 1);
-    var instanceMatrix = mult(translate(0.0, 0, 0.0),s);
+    var s = scale4(31.2, 31.2, 1);
+    var instanceMatrix = mult(translate(0.0, 0, -0.6),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
@@ -1265,16 +1427,36 @@ function updateAnimation() {
 }
 
 var render = function() {
-
+    gl.useProgram(program);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    let look = lookAt(
-        eye,
-        vec3(0,0,0),
-        vec3(0,1,0)
-    )
-    projectionMatrix = mult(perspectiveConstant, look);
-    gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
+    if (isMainCameraMode) {
+        let look = lookAt(
+            eye,
+            vec3(0,0,0),
+            vec3(0,1,0)
+        )
+        projectionMatrix = mult(perspectiveConstant, look);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
+        gl.useProgram(shadowProgramYp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramYp, "projectionMatrix"),  false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramYm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramYm, "projectionMatrix"),  false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramXp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramXp, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramXm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramXm, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramZp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZp, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramZm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZm, "projectionMatrix"), false, flatten(projectionMatrix));
+        gl.useProgram(program);
+    }
 
     // Background
     forcedConfigureTexture(wallImage);

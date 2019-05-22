@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<!-- Vertex shader for shadow -->
-<script id="vertex-shadow" type="x-shader/x-vertex">
+<!-- Vertex shader for shadow on floor-->
+<script id="vertex-shadowyp" type="x-shader/x-vertex">
 attribute vec4 vPosition;
 varying vec4 fColor;
 
@@ -14,14 +14,122 @@ void main(){
     vec4 v = modelViewMatrix * vPosition;
     float slopeX = (lightPosition.y-v.y)/(lightPosition.x-v.x);
     float slopeZ = (lightPosition.y-v.y)/(lightPosition.z-v.z);
-    v.x = lightPosition.x - (lightPosition.y / slopeX);
-    v.z = lightPosition.z - (lightPosition.y / slopeZ);
-    v.y = 0.0;
+    v.x = lightPosition.x - ((lightPosition.y + 15.0) / slopeX);
+    v.z = lightPosition.z - ((lightPosition.y + 15.0) / slopeZ);
+    v.y = -15.0;
+    
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+</script>
 
-    if (light) {
-      gl_Position = projectionMatrix * v;
-      fColor = vec4(0.0, 0.0, 0.0, 0.8);
-    }
+<script id="vertex-shadowym" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform bool light;
+
+void main(){
+    vec4 v = modelViewMatrix * vPosition;
+    float slopeX = (lightPosition.y-v.y)/(lightPosition.x-v.x);
+    float slopeZ = (lightPosition.y-v.y)/(lightPosition.z-v.z);
+    v.x = lightPosition.x - ((lightPosition.y - 15.0) / slopeX);
+    v.z = lightPosition.z - ((lightPosition.y - 15.0) / slopeZ);
+    v.y = 15.0;
+    
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+</script>
+
+<script id="vertex-shadowxp" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform bool light;
+
+void main(){
+    vec4 v = modelViewMatrix * vPosition;
+    float slopeY = (lightPosition.x-v.x)/(lightPosition.y-v.y);
+    float slopeZ = (lightPosition.x-v.x)/(lightPosition.z-v.z);
+    v.y = lightPosition.y - ((lightPosition.x + 15.0) / slopeY);
+    v.z = lightPosition.z - ((lightPosition.x + 15.0) / slopeZ);
+    v.x = -15.0;
+
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+</script>
+
+<script id="vertex-shadowxm" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform bool light;
+
+void main(){
+    vec4 v = modelViewMatrix * vPosition;
+    float slopeY = (lightPosition.x-v.x)/(lightPosition.y-v.y);
+    float slopeZ = (lightPosition.x-v.x)/(lightPosition.z-v.z);
+    v.y = lightPosition.y - ((lightPosition.x - 15.0) / slopeY);
+    v.z = lightPosition.z - ((lightPosition.x - 15.0) / slopeZ);
+    v.x = 15.0;
+
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+</script>
+
+<script id="vertex-shadowzp" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform bool light;
+
+void main(){
+    vec4 v = modelViewMatrix * vPosition;
+    float slopeY = (lightPosition.z-v.z)/(lightPosition.y-v.y);
+    float slopeX = (lightPosition.z-v.z)/(lightPosition.x-v.x);
+    v.y = lightPosition.y - ((lightPosition.z + 15.0) / slopeY);
+    v.x = lightPosition.x - ((lightPosition.z + 15.0) / slopeX);
+    v.z = -15.0;
+
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+</script>
+
+<script id="vertex-shadowzm" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform bool light;
+
+void main(){
+    vec4 v = modelViewMatrix * vPosition;
+    float slopeY = (lightPosition.z-v.z)/(lightPosition.y-v.y);
+    float slopeX = (lightPosition.z-v.z)/(lightPosition.x-v.x);
+    v.y = lightPosition.y - ((lightPosition.z - 15.0) / slopeY);
+    v.x = lightPosition.x - ((lightPosition.z - 15.0) / slopeX);
+    v.z = 15.0;
+
+    gl_Position = projectionMatrix * v;
+    fColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
 </script>
 
