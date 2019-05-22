@@ -239,7 +239,7 @@ var materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 var materialShininess = 100.0;
 
-var look;
+var eye = vec3(0, 0, 20);
 var perspectiveConstant;
 
 // Parameters for texture and image
@@ -453,7 +453,7 @@ window.onload = function init() {
 
     gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
-    look = lookAt(
+    let look = lookAt(
         vec3(0.0, 0.0, 20),
         vec3(0,0,0),
         vec3(0,1,0)
@@ -692,6 +692,25 @@ window.onload = function init() {
     document.getElementById("textureButton").onclick = function () {
         textureFlag = !textureFlag;
     }
+
+    document.addEventListener("keydown", (e) => {
+        switch (e.keyCode) {
+            case 87:
+                eye[1]++;
+                break;
+            case 83:
+                eye[1]--;
+                break;
+            case 65:
+                eye[0]--;
+                break;
+            case 68:
+                eye[0]++;
+                break;
+            default:
+                break;
+        }
+    });
 
     texture = gl.createTexture();
 
@@ -1248,6 +1267,14 @@ function updateAnimation() {
 var render = function() {
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    let look = lookAt(
+        eye,
+        vec3(0,0,0),
+        vec3(0,1,0)
+    )
+    projectionMatrix = mult(perspectiveConstant, look);
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
 
     // Background
     forcedConfigureTexture(wallImage);
