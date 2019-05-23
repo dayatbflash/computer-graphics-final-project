@@ -880,10 +880,10 @@ function palm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function lowerPinkie() {
@@ -893,10 +893,10 @@ function lowerPinkie() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function upperPinkie() {
@@ -906,10 +906,10 @@ function upperPinkie() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function lowerRing() {
@@ -919,10 +919,10 @@ function lowerRing() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function upperRing() {
@@ -932,10 +932,10 @@ function upperRing() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function lowerMiddle() {
@@ -945,10 +945,10 @@ function lowerMiddle() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function upperMiddle() {
@@ -958,10 +958,10 @@ function upperMiddle() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function lowerIndex() {
@@ -971,10 +971,10 @@ function lowerIndex() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function upperIndex() {
@@ -984,10 +984,10 @@ function upperIndex() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function lowerThumb() {
@@ -997,10 +997,10 @@ function lowerThumb() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function upperThumb() {
@@ -1010,10 +1010,10 @@ function upperThumb() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 // Instantiate Object Parts for Object2 (Robot)
@@ -1026,10 +1026,10 @@ function torso() {
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
         
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function head() {
@@ -1071,10 +1071,10 @@ function head() {
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function drawShadow(t, startIndex = 0, EndIndex = cubeNumVertices) {
@@ -1119,10 +1119,10 @@ function leftUpperArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function leftLowerArm() {
@@ -1132,10 +1132,10 @@ function leftLowerArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function rightUpperArm() {
@@ -1145,10 +1145,10 @@ function rightUpperArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function rightLowerArm() {
@@ -1158,10 +1158,10 @@ function rightLowerArm() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function leftUpperLeg() {
@@ -1171,10 +1171,10 @@ function leftUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function leftLowerLeg() {
@@ -1184,10 +1184,10 @@ function leftLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function rightUpperLeg() {
@@ -1197,10 +1197,10 @@ function rightUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function rightLowerLeg() {
@@ -1210,10 +1210,10 @@ function rightLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 // Instantiate Object Parts for Object3 (Dino)
@@ -1225,10 +1225,10 @@ function dinoTorso() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoHead() {
@@ -1238,10 +1238,10 @@ function dinoHead() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoLeftUpperLeg() {
@@ -1250,10 +1250,10 @@ function dinoLeftUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoLeftLowerLeg() {
@@ -1263,10 +1263,10 @@ function dinoLeftLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoRightUpperLeg() {
@@ -1275,10 +1275,10 @@ function dinoRightUpperLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoRightLowerLeg() {
@@ -1288,10 +1288,10 @@ function dinoRightLowerLeg() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoTail1() {
@@ -1301,10 +1301,10 @@ function dinoTail1() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoTail2() {
@@ -1314,10 +1314,10 @@ function dinoTail2() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 function dinoTail3() {
@@ -1327,10 +1327,10 @@ function dinoTail3() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 // Instantiate Object Parts for Object4 (Cube)
@@ -1341,10 +1341,10 @@ function cube() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
-        drawShadow(t);
     } else {
         for(var i=0; i<cubeNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t);
 }
 
 // Instantiate Object Parts for Object5 (Pyramid)
@@ -1355,10 +1355,10 @@ function pyramid() {
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, cubeNumVertices, pyramidNumVertices);
-        drawShadow(t, cubeNumVertices, pyramidNumVertices);
     } else {
         for(var i=cubeNumVertices; i<cubeNumVertices+pyramidNumVertices; i+=3) gl.drawArrays(gl.LINE_LOOP, i, 3);
     }
+    drawShadow(t, cubeNumVertices, pyramidNumVertices);
 }
 
 // Instantiate Object Parts for Room
