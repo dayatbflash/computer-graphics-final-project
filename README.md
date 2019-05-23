@@ -14,3 +14,14 @@ Terdapat pula Tombol Toggle Animasi dari masing-masing objek, jika ditekan akan 
 Terdapat tombol Toggle Texture yang berguna untuk mengubah texture dari objek-objek yang ada dari texture material ke wirefram, dan sebaliknya.
 
 Terdapat tombol Toggle Camera Mode yang berguna untuk mengubah posisi camera dari yang berada di ruangan dan melihat ke objek-objek menjadi camera yang berada pada head dari robot, dan sebaliknya.
+
+### Log Pekerjaan dan Tugas Masing-Masing Anggota Kelompok
+* Nur Hidayat :
+  * Log : Rabu(24/5) Siang - Kamis(25/5) Sore
+  * Tugas : Membuat Camera Modes, dan Shadow.
+* Bram Sedana :
+  * Log : Selasa(23/5) Pagi - Rabu(24/5) Siang, Kamis(25/5) Siang - Kamis(25/5) Sore
+  * Tugas : Membuat Objek Robot, Dino, dan Light.
+* Rayza Arasj Mahardhika :
+  * Log : Selasa(23/5) Pagi - Rabu(24/5) Siang, Kamis(25/5) Siang - Kamis(25/5) Sore
+  * Tugas : Membuat Objek Hand, Cube, dan Pyramid. Texturing.
