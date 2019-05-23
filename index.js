@@ -258,6 +258,7 @@ var texture;
 var redTexture;
 var pyramidTexture;
 var cubeTexture;
+var whiteTexture;
 
 // Parameters for GL Buffer
 
@@ -560,6 +561,7 @@ window.onload = function init() {
     redTexture = document.getElementById("red-texture");
     pyramidTexture = document.getElementById("pyramid-texture");
     cubeTexture = document.getElementById("cube-texture");
+    whiteTexture = document.getElementById("white-texture");
 
     // Slider for Object 1 (Hand)
 
@@ -1494,12 +1496,13 @@ var render = function() {
         gl.useProgram(program);
     }
 
-    // Background
-    forcedConfigureTexture(wallImage);
-
     // Light
+    forcedConfigureTexture(whiteTexture);
     modelViewMatrix = translate(0,0,0,0);
     light();
+
+    // Background
+    forcedConfigureTexture(wallImage);
 
     // Floor
     modelViewMatrix = translate(0,0,0,0);
