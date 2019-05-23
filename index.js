@@ -230,7 +230,7 @@ var thetaPyramidAnimation = [0, 0, 0];
 // Parameters to control the material and lighting
 
 var lightPosition = vec4(0.0, 100.0, 50.0, 0.0);
-var pointLightPosition = vec4(-10, 10, 0, 0);
+var pointLightPosition = vec4(-10, 10, 10, 0);
 var lightAmbient = vec4(0.6, 0.6, 0.6, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -1395,6 +1395,13 @@ function backWall() {
     gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 }
 
+function light() {
+    var instanceMatrix = translate(pointLightPosition[0],pointLightPosition[1],pointLightPosition[2],pointLightPosition[3]);
+    var t = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
+}
+
 function updateThetaFist(delta) {
     thetaHand[LowerPinkie] += delta;
     thetaHand[UpperPinkie] += delta;
@@ -1489,6 +1496,11 @@ var render = function() {
 
     // Background
     forcedConfigureTexture(wallImage);
+
+    // Light
+    modelViewMatrix = translate(0,0,0,0);
+    light();
+
     // Floor
     modelViewMatrix = translate(0,0,0,0);
     floor();
