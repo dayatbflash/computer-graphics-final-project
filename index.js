@@ -229,8 +229,9 @@ var thetaPyramidAnimation = [0, 0, 0];
 
 // Parameters to control the material and lighting
 
+var lightX = -10;
 var lightPosition = vec4(0.0, 100.0, 50.0, 0.0);
-var pointLightPosition = vec4(-10, 10, 10, 0);
+var pointLightPosition = vec4(lightX, 10, 10, 0);
 var lightAmbient = vec4(0.6, 0.6, 0.6, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -717,6 +718,11 @@ window.onload = function init() {
 
     document.getElementById("PyramidZSlider").onchange = function(event) {
         thetaPyramid[pyramidZ] = parseInt(event.target.value);
+    };
+
+    document.getElementById("CameraXPosition").onchange = function(event) {
+        lightX = parseInt(event.target.value);
+        pointLightPosition = vec4(lightX, 10, 10, 0);
     };
 
     document.getElementById("animateButton1").onclick = function() {
