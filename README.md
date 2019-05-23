@@ -29,10 +29,22 @@ Object hierarchy pertama (Hand) terdiri dari 11 cube dan 10 joint.
 Object hierarchy kedua (Robot) terdiri dari 10 cube dan 9 joint.
 Object hierarchy ketiga (Dino) terdiri dari 9 cube dan 8 joint.
 
+### Proses rendering objek dan scene
+Dalam proses rending, ada 6 vertex-shader dan 2 fragment-shader yang digunakan. 1 vertex-shader untuk render objek-objek, 5 sisanya untuk
+render bayangan masing-masing memprojeksikan titik-titik objek ke 5 bidang (ceiling, floor, leftwall, rightwall, back).
+
+1 Fragment-shader digunakan untuk render fragment dari objek-objek. 1 sisanya untuk render fragment bayangan, fragment ini dipakai bersama 5 vertex-shader khusus untuk bayangan.
+
+### Algoritma khusus yang digunakan
+Dilakukan proyeksi vektor sederhana dalam menentukan titik-titik bayangan yang berada di dinding, lantai, dan atap.
+Dengan memanfaatkan persamaan garis, program mendapatkan informasi slope dari 2 sisi yang akan di projeksikan. misalnya jika ingin
+mendapatkan projeksi y dan z dengan x = 0, yang diperlukan adalah nilai slope dari y dan z antara titik objek dan titik lightsource.
+Lalu kemudian menggeser x sampai x = 0, y dan z akan menyesuaikan berdasarkan geseran x.
+
 ### Log Pekerjaan dan Tugas Masing-Masing Anggota Kelompok
 * Nur Hidayat :
   * Log : Rabu(24/5) Siang - Kamis(25/5) Sore
-  * Tugas : Membuat Camera Modes, dan Shadow.
+  * Tugas : Membuat Camera Modes, Viewing, dan Shadow.
 * Bram Sedana :
   * Log : Selasa(23/5) Pagi - Rabu(24/5) Siang, Kamis(25/5) Siang - Kamis(25/5) Sore
   * Tugas : Membuat Objek Robot, Dino, dan Light.
