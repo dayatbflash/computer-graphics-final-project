@@ -229,9 +229,9 @@ var thetaPyramidAnimation = [0, 0, 0];
 
 // Parameters to control the material and lighting
 
-var lightPosition = vec4(0.0, 0.0, 50.0, 0.0);
-var pointLightPosition = vec4(-10, -10, 10, 0);
-var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+var lightPosition = vec4(0.0, 100.0, 50.0, 0.0);
+var pointLightPosition = vec4(-10, 10, 0, 0);
+var lightAmbient = vec4(0.6, 0.6, 0.6, 1.0);
 var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
@@ -241,6 +241,8 @@ var materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 var materialShininess = 100.0;
 
 var eye = vec3(0, 10, 30);
+var at = vec3(0, 0, 0);
+var up = vec3(0, 1, 0);
 var perspectiveConstant;
 var isMainCameraMode = true;
 var modelViewMatrixSYmLoc, modelViewMatrixSYpLoc, modelViewMatrixSXpLoc, modelViewMatrixSZpLoc, modelViewMatrixSZmLoc, modelViewMatrixSXmLoc;
@@ -780,6 +782,10 @@ window.onload = function init() {
         textureFlag = !textureFlag;
     }
 
+    document.getElementById("cameraButton").onclick = function () {
+        isMainCameraMode = !isMainCameraMode;
+    }
+
     document.addEventListener("keydown", (e) => {
         switch (e.keyCode) {
             case 87:
@@ -1023,6 +1029,37 @@ function head() {
     var instanceMatrix = mult(translate(0.0, 0.5 * headHeight, 0.0),s);
     var t = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewMatrixLoc,  false, flatten(t));
+    if (!isMainCameraMode) {
+        let robotEye = mult(modelViewMatrix, vec4(0,torsoHeight+headHeight,0,0));
+        let robotAt = mult(modelViewMatrix, vec4(0,torsoHeight+headHeight,1,0));
+        console.log(robotEye);
+        console.log(robotAt);
+        let look = lookAt(
+            vec3(robotEye),
+            vec3(robotAt),
+            vec3(0,1,0)
+        )
+        projectionMatrix = mult(perspectiveConstant, look);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"),  false, flatten(projectionMatrix));
+        gl.useProgram(shadowProgramYp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramYp, "projectionMatrix"),  false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramYm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramYm, "projectionMatrix"),  false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramXp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramXp, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramXm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramXm, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramZp);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZp, "projectionMatrix"), false, flatten(projectionMatrix));
+
+        gl.useProgram(shadowProgramZm);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZm, "projectionMatrix"), false, flatten(projectionMatrix));
+        gl.useProgram(program);
+    }
     if (textureFlag) {
         gl.drawArrays(gl.TRIANGLES, 0, cubeNumVertices);
 
@@ -1062,12 +1099,6 @@ function drawShadow(t, startIndex = 0, EndIndex = cubeNumVertices) {
     gl.uniform4fv(gl.getUniformLocation(shadowProgramZp, "lightPosition"),
        flatten(pointLightPosition) );
     gl.uniformMatrix4fv(modelViewMatrixSZpLoc, false, flatten(t) );
-    gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
-
-    gl.useProgram(shadowProgramZm);
-    gl.uniform4fv(gl.getUniformLocation(shadowProgramZm, "lightPosition"),
-       flatten(pointLightPosition) );
-    gl.uniformMatrix4fv(modelViewMatrixSZmLoc, false, flatten(t) );
     gl.drawArrays(gl.TRIANGLES, startIndex, EndIndex);
 
     gl.useProgram(program);
@@ -1453,8 +1484,6 @@ var render = function() {
         gl.useProgram(shadowProgramZp);
         gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZp, "projectionMatrix"), false, flatten(projectionMatrix));
 
-        gl.useProgram(shadowProgramZm);
-        gl.uniformMatrix4fv(gl.getUniformLocation(shadowProgramZm, "projectionMatrix"), false, flatten(projectionMatrix));
         gl.useProgram(program);
     }
 
